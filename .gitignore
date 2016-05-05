@@ -1,3 +1,10 @@
+# WebStorm IDE
+.idea
+
+# Project folders
+public
+production
+
 # Logs
 logs
 *.log
@@ -24,6 +31,7 @@ coverage
 build/Release
 
 # Dependency directory
+bower_components
 node_modules
 
 # Optional npm cache directory

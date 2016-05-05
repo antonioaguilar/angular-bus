@@ -1,0 +1,24 @@
+{
+  "name": "angular-bus",
+  "homepage": "https://github.com/antonioaguilar/angular-bus",
+  "authors": [
+    "aa6446694@gmail.com"
+  ],
+  "description": "AngularJS Message Bus",
+  "main": "pubsub.js",
+  "keywords": [
+    "angular",
+    "message",
+    "bus",
+    "pubsub",
+    "events"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
