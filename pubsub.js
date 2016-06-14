@@ -522,7 +522,7 @@
       ++pubInProgress;
 
       // By default _.now() is just Date.now(), except in environments that do not support it.
-      envelope.epoch = Date.now() || function() { return new Date().getTime(); };
+      envelope.epoch = new Date().toISOString();
 
       var channel = envelope.channel = envelope.channel || _config.DEFAULT_CHANNEL;
       var topic = envelope.topic;
