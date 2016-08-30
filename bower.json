@@ -1,11 +1,11 @@
 {
   "name": "angular-bus",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/antonioaguilar/angular-bus",
   "authors": ["Antonio Aguilar"],
   "description": "Advanced AngularJS Message Bus",
   "main": "angular-bus.js",
   "keywords": ["angular", "message bus", "pubsub"],
   "license": "MIT",
-  "ignore": ["**/.*"]
+  "ignore": ["**/.*", "bower.json", "README.md"]
 }
