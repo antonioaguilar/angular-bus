@@ -7,5 +7,5 @@
   "main": "angular-bus.js",
   "keywords": ["angular", "message bus", "pubsub"],
   "license": "MIT",
-  "ignore": ["**/.*", "bower.json", "README.md"]
+  "ignore": ["**/.*"]
 }
