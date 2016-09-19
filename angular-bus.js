@@ -1,4 +1,4 @@
-s/*
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2016 Antonio Aguilar
