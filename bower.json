@@ -1,6 +1,6 @@
 {
   "name": "angular-bus",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "homepage": "https://github.com/antonioaguilar/angular-bus",
   "authors": ["Antonio Aguilar"],
   "description": "Advanced AngularJS Message Bus",
