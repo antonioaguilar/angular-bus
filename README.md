@@ -1,3 +1,3 @@
 # angular-bus
 
-Advanced AngularJS Message Bus
+Advanced Message Bus for Angular apps

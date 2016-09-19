@@ -203,22 +203,6 @@
       }
     },
 
-    logError: function logError() {
-      if ( console ) {
-        var report;
-
-        if ( console.warn ) {
-          report = console.warn;
-        }
-        else {
-          report = console.log;
-        }
-
-        this.catch(report);
-      }
-      return this;
-    },
-
     once: function once() {
       return this.disposeAfter(1);
     },
