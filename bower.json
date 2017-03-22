@@ -1,11 +1,11 @@
 {
   "name": "angular-bus",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "homepage": "https://github.com/antonioaguilar/angular-bus",
   "authors": ["Antonio Aguilar"],
   "description": "Advanced Message Bus for Angular apps",
   "main": "angular-bus.js",
   "keywords": ["angular", "message bus", "pubsub"],
   "license": "MIT",
-  "ignore": ["**/.*"]
+  "ignore": ["**/.*", "node_modules", "index.js", "package.json", "pubsub.js", "webpack.config.js"]
 }
