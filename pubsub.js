@@ -24,7 +24,7 @@ function pegStream(stream) {
 }
 
 function unpegStream(stream) {
-  if(!--stream.subscriberCount) {
+  if(!stream.subscriberCount && !--stream.subscriberCount) {
     delete directory[stream._source._channelName].topics[stream._binding];
   }
 }

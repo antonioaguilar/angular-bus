@@ -1,5 +1,3992 @@
-!function(t){function n(e){if(i[e])return i[e].exports;var r=i[e]={i:e,l:!1,exports:{}};return t[e].call(r.exports,r,r.exports,n),r.l=!0,r.exports}var i={};n.m=t,n.c=i,n.i=function(t){return t},n.d=function(t,i,e){n.o(t,i)||Object.defineProperty(t,i,{configurable:!1,enumerable:!0,get:e})},n.n=function(t){var i=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(i,"a",i),i},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="",n(n.s=1)}([function(t,n,i){"use strict";function e(t){t.subscriberCount=t.subscriberCount?t.subscriberCount+1:1}function r(t){--t.subscriberCount||delete m[t._source._channelName].topics[t._binding]}function u(t){var n=void 0,i="^"+t.split(".").map(function(t){var i="";return n&&(i="#"!==n?"\\.\\b":"\\b"),i+="#"===t?"[\\s\\S]*":"*"===t?"[^.]+":t,n=t,i}).join("")+"$";return new RegExp(i)}function s(t){if(t.indexOf("#")===-1&&t.indexOf("*")===-1)return function(n){return n.topic===t};var n=u(t);return function(t){return n.test(t.topic)}}function o(t){return m[t]||(m[t]={stream:v.filter(function(n){return n.channel===t}),topics:{}},m[t].stream._channelName=t),m[t]}function a(t,n){var i=o(t),e=s(n),r=i.topics[n]||(i.topics[n]=i.stream.filter(function(t){return e(t)}));return r._binding=n,r}function h(t){t.timestamp=(new Date).toISOString(),p&&p.emit(t)}function l(t){return new y(a(t.channel,t.topic),t.callback)}function f(t){var n=v.observe({value:function(n){t(n.data,n)}});return function(){n.unsubscribe()}}function c(){m={},p&&p.end(),p=null,v=d.stream(function(t){return p=t,function(){p=null}})}function _(t,n,i,u){function s(){_.unsubscribe(),o.forEach(function(t){r(t)}),o=[]}var o=[],h=u||{};t.forEach(function(t){var n=a(t.channel,t.topic);e(n),o.push(n)});var l=d.zip(o),f=h.once?l.take(1):l,c=f.map(function(t){return t.map(function(t){return t.data})}),_=c.observe({value:function(t){n.apply(this,t)},error:i,end:s});return s}var d=i(2),v=void 0,p=void 0,m=void 0,y=function(t,n,i){this.stream=t,this.onUnsubscribe=null,this.subscription=t.observe({value:function(t){n(t.data,t)},error:i}),e(t)};y.prototype.unsubscribe=function(){"function"==typeof this.onUnsubscribe&&this.onUnsubscribe(),this.subscription.unsubscribe(),r(this.stream)},c(),t.exports={publish:h,subscribe:l,addWireTap:f,reset:c,when:_}},function(t,n,i){"use strict";!function(){var t=i(0);angular.module("ngBus",[]).config(["$provide",function(n){n.decorator("$rootScope",["$delegate",function(n){return Object.defineProperty(n.constructor.prototype,"$event",{get:function(){var n=this;return{when:t.when.bind(t),publish:t.publish.bind(t),subscribe:function(){var i=t.subscribe.apply(t,arguments);return i.onUnsubscribe=n.$on("$destroy",function(){i.unsubscribe()}),i},addWireTap:t.addWireTap.bind(t),reset:t.reset}},enumerable:!1}),n}])}])}()},function(t,n,i){(function(t){/*! Kefir.js v3.7.1
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Kefir = __webpack_require__(2);
+var eventStream = void 0;
+var publishEmitter = void 0;
+var directory = void 0;
+
+var SubscriptionDefinition = function SubscriptionDefinition(stream, callback, onError) {
+  this.stream = stream;
+  this.onUnsubscribe = null;
+  this.subscription = stream.observe({ value: function value(ev) {
+      callback(ev.data, ev);
+    }, error: onError });
+  pegStream(stream);
+};
+
+SubscriptionDefinition.prototype.unsubscribe = function () {
+  if (typeof this.onUnsubscribe === 'function') {
+    this.onUnsubscribe();
+  }
+
+  this.subscription.unsubscribe();
+  unpegStream(this.stream);
+};
+
+function pegStream(stream) {
+  stream.subscriberCount = stream.subscriberCount ? stream.subscriberCount + 1 : 1;
+}
+
+function unpegStream(stream) {
+  if (!stream.subscriberCount && ! --stream.subscriberCount) {
+    delete directory[stream._source._channelName].topics[stream._binding];
+  }
+}
+
+function topicRegex(topic) {
+  var prevSegment = void 0;
+  var pattern = '^' + topic.split('.').map(function mapTopicBinding(segment) {
+    var res = '';
+    if (!!prevSegment) {
+      res = prevSegment !== '#' ? '\\.\\b' : '\\b';
+    }
+    if (segment === '#') {
+      res += '[\\s\\S]*';
+    } else if (segment === '*') {
+      res += '[^.]+';
+    } else {
+      res += segment;
+    }
+    prevSegment = segment;
+    return res;
+  }).join('') + '$';
+  return new RegExp(pattern);
+}
+
+function topicComparator(binding) {
+  if (binding.indexOf('#') === -1 && binding.indexOf('*') === -1) {
+    return function (ev) {
+      return ev.topic === binding;
+    };
+  } else {
+    var rgx = topicRegex(binding);
+    return function (ev) {
+      return rgx.test(ev.topic);
+    };
+  }
+}
+
+function getChannel(name) {
+  if (!directory[name]) {
+    directory[name] = {
+      stream: eventStream.filter(function (ev) {
+        return ev.channel === name;
+      }),
+      topics: {}
+    };
+    directory[name].stream._channelName = name;
+  }
+  return directory[name];
+}
+
+function getTopicStream(channelName, binding) {
+  var channel = getChannel(channelName);
+  var cmp = topicComparator(binding);
+  var stream = channel.topics[binding] || (channel.topics[binding] = channel.stream.filter(function (ev) {
+    return cmp(ev);
+  }));
+  stream._binding = binding;
+  return stream;
+}
+
+function publish(event) {
+  event.timestamp = new Date().toISOString();
+  publishEmitter && publishEmitter.emit(event);
+}
+
+function subscribe(def) {
+  return new SubscriptionDefinition(getTopicStream(def.channel, def.topic), def.callback);
+}
+
+function addWireTap(callback) {
+  var subscription = eventStream.observe({ value: function value(ev) {
+      callback(ev.data, ev);
+    } });
+  return function () {
+    subscription.unsubscribe();
+  };
+}
+
+function reset() {
+  directory = {};
+  publishEmitter && publishEmitter.end();
+  publishEmitter = null;
+  eventStream = Kefir.stream(function (emitter) {
+    publishEmitter = emitter;
+    return function () {
+      publishEmitter = null;
+    };
+  });
+}
+
+function when(defs, onSuccess, onError, options) {
+  var streams = [];
+  var _options = options || {};
+  defs.forEach(function (def) {
+    var stream = getTopicStream(def.channel, def.topic);
+    pegStream(stream);
+    streams.push(stream);
+  });
+  var aligned = Kefir.zip(streams);
+  var limited = _options.once ? aligned.take(1) : aligned;
+  var stripped = limited.map(function (data) {
+    return data.map(function (el) {
+      return el.data;
+    });
+  });
+  var observer = stripped.observe({ value: function value(data) {
+      onSuccess.apply(this, data);
+    }, error: onError, end: dispose });
+
+  function dispose() {
+    observer.unsubscribe();
+    streams.forEach(function (stream) {
+      unpegStream(stream);
+    });
+    streams = [];
+  }
+
+  return dispose;
+}
+
+reset();
+
+module.exports = {
+  publish: publish,
+  subscribe: subscribe,
+  addWireTap: addWireTap,
+  reset: reset,
+  when: when
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Bind pubsub to Angular root scope as $event property
+(function () {
+  var pubsub = __webpack_require__(0);
+  angular.module('ngBus', []).config(["$provide", function ($provide) {
+    $provide.decorator('$rootScope', ["$delegate", function ($delegate) {
+      Object.defineProperty($delegate.constructor.prototype, '$event', {
+        get: function get() {
+          var self = this;
+          return {
+            when: pubsub.when.bind(pubsub),
+            publish: pubsub.publish.bind(pubsub),
+            subscribe: function subscribe() {
+              var sub = pubsub.subscribe.apply(pubsub, arguments);
+              sub.onUnsubscribe = self.$on('$destroy', function () {
+                sub.unsubscribe();
+              });
+              return sub;
+            },
+            addWireTap: pubsub.addWireTap.bind(pubsub),
+            reset: pubsub.reset
+          };
+        },
+        enumerable: false
+      });
+      return $delegate;
+    }]);
+  }]);
+})();
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/*! Kefir.js v3.7.2
  *  https://github.com/rpominov/kefir
  */
-!function(t,i){i(n)}(0,function(n){"use strict";function i(t){var n=function(){};return n.prototype=t,new n}function e(t){var n=arguments.length,i=void 0,e=void 0;for(i=1;i<n;i++)for(e in arguments[i])t[e]=arguments[i][e];return t}function r(t,n){var r=arguments.length,u=void 0;for(t.prototype=i(n.prototype),t.prototype.constructor=t,u=2;u<r;u++)e(t.prototype,arguments[u]);return t}function u(t,n){var i=void 0,e=void 0,r=void 0,u=void 0;if(0===t.length)return n;if(0===n.length)return t;for(u=0,i=new Array(t.length+n.length),e=t.length,r=0;r<e;r++,u++)i[u]=t[r];for(e=n.length,r=0;r<e;r++,u++)i[u]=n[r];return i}function s(t,n){var i=t.length,e=void 0;for(e=0;e<i;e++)if(t[e]===n)return e;return-1}function o(t,n){var i=t.length,e=void 0;for(e=0;e<i;e++)if(n(t[e]))return e;return-1}function a(t){var n=t.length,i=new Array(n),e=void 0;for(e=0;e<n;e++)i[e]=t[e];return i}function h(t,n){var i=t.length,e=void 0,r=void 0,u=void 0;if(n>=0&&n<i){if(1===i)return[];for(e=new Array(i-1),r=0,u=0;r<i;r++)r!==n&&(e[u]=t[r],u++);return e}return t}function l(t,n){var i=t.length,e=new Array(i),r=void 0;for(r=0;r<i;r++)e[r]=n(t[r]);return e}function f(t,n){var i=t.length,e=void 0;for(e=0;e<i;e++)n(t[e])}function c(t,n){var i=t.length,e=void 0;for(e=0;e<i;e++)t[e]=n}function _(t,n){return s(t,n)!==-1}function d(t,n,i){var e=Math.min(i,t.length+1),r=t.length-e+1,u=new Array(e),s=void 0;for(s=r;s<e;s++)u[s-r]=t[s];return u[e-1]=n,u}function v(t,n,i){t===cn?n(i):t===i.type&&(t===ln||t===fn?n(i.value):n())}function p(){this._items=[],this._spies=[],this._inLoop=0,this._removedItems=null}function m(){this._dispatcher=new p,this._active=!1,this._alive=!0,this._activating=!1,this._logHandlers=null,this._spyHandlers=null}function y(){m.call(this)}function b(){m.call(this),this._currentEvent=null}function g(){return _n}function E(t){function n(t,n){var i=this;y.call(this),this._wait=t,this._intervalId=null,this._$onTick=function(){return i._onTick()},this._init(n)}return r(n,y,{_init:function(){},_free:function(){},_onTick:function(){},_onActivation:function(){this._intervalId=setInterval(this._$onTick,this._wait)},_onDeactivation:function(){null!==this._intervalId&&(clearInterval(this._intervalId),this._intervalId=null)},_clear:function(){y.prototype._clear.call(this),this._$onTick=null,this._free()}},t),n}function w(t,n){return new dn(t,{x:n})}function A(t,n){return new vn(t,{x:n})}function S(t,n){return 0===n.length?g():new pn(t,{xs:n})}function V(t,n){return new mn(t,{fn:n})}function T(t){function n(n){return t._emitValue(n),t._active}function i(n){return t._emitError(n),t._active}function e(){return t._emitEnd(),t._active}function r(n){return t._emit(n.type,n.value),t._active}return{value:n,error:i,end:e,event:r,emit:n,emitEvent:r}}function $(t,n){return new yn(t,{fn:n})}function C(t){y.call(this),this._fn=t,this._unsubscribe=null}function O(t){return new C(t)}function x(t){var n=!1;return O(function(i){n||(t(function(t){i.emit(t),i.end()}),n=!0)}).setName("fromCallback")}function k(t){var n=!1;return O(function(i){n||(t(function(t,n){t?i.error(t):i.emit(n),i.end()}),n=!0)}).setName("fromNodeCallback")}function I(t,n){switch(n){case 0:return function(){return t()};case 1:return function(n){return t(n[0])};case 2:return function(n){return t(n[0],n[1])};case 3:return function(n){return t(n[0],n[1],n[2])};case 4:return function(n){return t(n[0],n[1],n[2],n[3])};default:return function(n){return t.apply(null,n)}}}function L(t,n,i){var e=i?i.length:0;if(null==n)switch(e){case 0:return t();case 1:return t(i[0]);case 2:return t(i[0],i[1]);case 3:return t(i[0],i[1],i[2]);case 4:return t(i[0],i[1],i[2],i[3]);default:return t.apply(null,i)}else switch(e){case 0:return t.call(n);default:return t.apply(n,i)}}function P(t,n,i){return O(function(e){var r=i?function(){e.emit(L(i,this,arguments))}:function(t){e.emit(t)};return t(r),function(){return n(r)}}).setName("fromSubUnsub")}function M(t,n,i){for(var e=void 0,r=void 0,u=0;u<bn.length;u++)if("function"==typeof t[bn[u][0]]&&"function"==typeof t[bn[u][1]]){e=bn[u][0],r=bn[u][1];break}if(void 0===e)throw new Error("target don't support any of addEventListener/removeEventListener, addListener/removeListener, on/off method pair");return P(function(i){return t[e](n,i)},function(i){return t[r](n,i)},i).setName("fromEvents")}function H(t){this._currentEvent={type:"value",value:t,current:!0}}function D(t){return new H(t)}function N(t){this._currentEvent={type:"error",value:t,current:!0}}function W(t){return new N(t)}function q(t,n){return function(i,e){var r=this;t.call(this),this._source=i,this._name=i._name+"."+n,this._init(e),this._$handleAny=function(t){return r._handleAny(t)}}}function B(t){return{_init:function(){},_free:function(){},_handleValue:function(t){this._emitValue(t)},_handleError:function(t){this._emitError(t)},_handleEnd:function(){this._emitEnd()},_handleAny:function(t){switch(t.type){case ln:return this._handleValue(t.value);case fn:return this._handleError(t.value);case hn:return this._handleEnd()}},_onActivation:function(){this._source.onAny(this._$handleAny)},_onDeactivation:function(){this._source.offAny(this._$handleAny)},_clear:function(){t.prototype._clear.call(this),this._source=null,this._$handleAny=null,this._free()}}}function j(t,n){var i=q(y,t);return r(i,y,B(y),n),i}function U(t,n){var i=q(b,t);return r(i,b,B(b),n),i}function F(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;if(null!==n&&"function"!=typeof n)throw new Error("You should call toProperty() with a function or no arguments.");return new gn(t,{fn:n})}function z(t){return new En(t)}function Q(t){var n=!1;return F(O(function(i){if(!n){var e=function(t){i.emit(t),i.end()},r=function(t){i.error(t),i.end()},u=t.then(e,r);u&&"function"==typeof u.done&&u.done(),n=!0}}),null).setName("fromPromise")}function Y(){if("function"==typeof Promise)return Promise;throw new Error("There isn't default Promise, use shim or parameter")}function K(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Y(),i=null;return new n(function(n,e){t.onAny(function(t){t.type===hn&&null!==i?((i.type===ln?n:e)(i.value),i=null):i=t})})}function R(t,n){return n={exports:{}},t(n,n.exports),n.exports}function G(t){var n=t[Cn]?t[Cn]():t;return O(function(t){var i=n.subscribe({error:function(n){t.error(n),t.end()},next:function(n){t.emit(n)},complete:function(){t.end()}});return i.unsubscribe?function(){i.unsubscribe()}:i}).setName("fromESObservable")}function J(t){this._observable=t.takeErrors(1)}function X(){return new J(this)}function Z(t,n,i){for(var e in t)t.hasOwnProperty(e)&&(n.push(e),i.push(t[e]))}function tt(t){for(var n=void 0,i=0;i<t.length;i++)void 0!==t[i]&&(void 0===n||n.index<t[i].index)&&(n=t[i]);return n.error}function nt(t,n,i){var e=this;y.call(this),this._activeCount=t.length,this._sources=u(t,n),this._combinator=i,this._aliveCount=0,this._latestValues=new Array(this._sources.length),this._latestErrors=new Array(this._sources.length),c(this._latestValues,an),this._emitAfterActivation=!1,this._endAfterActivation=!1,this._latestErrorIndex=0,this._$handlers=[];for(var r=0;r<this._sources.length;r++)!function(t){e._$handlers.push(function(n){return e._handleAny(t,n)})}(r)}function it(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:[],i=arguments[2];if(!Array.isArray(n))throw new Error("Combine can only combine active and passive collections of the same type.");return i=i?I(i,t.length+n.length):function(t){return t},0===t.length?g():new nt(t,n,i)}function et(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},i=arguments[2];if("object"!=typeof n||Array.isArray(n))throw new Error("Combine can only combine active and passive collections of the same type.");var e=[],r=[],u=[];Z(t,e,r),Z(n,e,u);var s=function(t){for(var n={},r=t.length-1;0<=r;r--)n[e[r]]=t[r];return i?i(n):n};return 0===r.length?g():new nt(r,u,s)}function rt(t,n,i){return"function"==typeof n&&(i=n,n=void 0),Array.isArray(t)?it(t,n,i):et(t,n,i)}function ut(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Pn;return new(t._ofSameType(In,Ln))(t,{fn:n})}function st(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Nn;return new(t._ofSameType(Hn,Dn))(t,{fn:n})}function ot(t,n){return new(t._ofSameType(qn,Bn))(t,{n:n})}function at(t,n){return new(t._ofSameType(Un,Fn))(t,{n:n})}function ht(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Kn;return new(t._ofSameType(Qn,Yn))(t,{fn:n})}function lt(t){return new(t._ofSameType(Gn,Jn))(t)}function ft(t,n){return new(t._ofSameType(Zn,ti))(t,{n:n})}function ct(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:ri;return new(t._ofSameType(ii,ei))(t,{fn:n})}function _t(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:ai;return new(t._ofSameType(si,oi))(t,{fn:n})}function dt(t,n){return[t,n]}function vt(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:an;return new(t._ofSameType(li,fi))(t,{fn:n||dt,seed:i})}function pt(t,n){return new ci(t,{fn:n,seed:arguments.length>2&&void 0!==arguments[2]?arguments[2]:an})}function mt(t){return new di(t,{fn:arguments.length>1&&void 0!==arguments[1]?arguments[1]:vi})}function yt(t,n){return new(t._ofSameType(yi,bi))(t,{wait:n})}function bt(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{},e=i.leading,r=void 0===e||e,u=i.trailing,s=void 0===u||u;return new(t._ofSameType(wi,Ai))(t,{wait:n,leading:r,trailing:s})}function gt(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{},e=i.immediate,r=void 0!==e&&e;return new(t._ofSameType(Vi,Ti))(t,{wait:n,immediate:r})}function Et(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:xi;return new(t._ofSameType(Ci,Oi))(t,{fn:n})}function wt(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Pi;return new(t._ofSameType(Ii,Li))(t,{fn:n})}function At(t){return new(t._ofSameType(Hi,Di))(t)}function St(t){return new(t._ofSameType(Wi,qi))(t)}function Vt(t){return new(t._ofSameType(ji,Ui))(t)}function Tt(t,n){return new(t._ofSameType(zi,Qi))(t,{fn:n})}function $t(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:0;return new(t._ofSameType(Ki,Ri))(t,{min:i,max:n})}function Ct(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{},e=i.flushOnEnd,r=void 0===e||e;return new(t._ofSameType(Ji,Xi))(t,{fn:n||Zi,flushOnEnd:r})}function Ot(t,n){var i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{},e=i.flushOnEnd,r=void 0===e||e;return new(t._ofSameType(ne,ie))(t,{count:n,flushOnEnd:r})}function xt(t,n,i){var e=arguments.length>3&&void 0!==arguments[3]?arguments[3]:{},r=e.flushOnEnd,u=void 0===r||r;return new(t._ofSameType(re,ue))(t,{wait:n,count:i,flushOnEnd:u})}function kt(t){return{"@@transducer/step":function(n,i){return t._emitValue(i),null},"@@transducer/result":function(){return t._emitEnd(),null}}}function It(t,n){return new(t._ofSameType(oe,ae))(t,{transducer:n})}function Lt(t,n){return new(t._ofSameType(le,fe))(t,{fn:n})}function Pt(t,n){var i=this;y.call(this),this._buffers=l(t,function(t){return ce(t)?a(t):[]}),this._sources=l(t,function(t){return ce(t)?g():t}),this._combinator=n?I(n,this._sources.length):function(t){return t},this._aliveCount=0,this._$handlers=[];for(var e=0;e<this._sources.length;e++)!function(t){i._$handlers.push(function(n){return i._handleAny(t,n)})}(e)}function Mt(t,n){return 0===t.length?g():new Pt(t,n)}function Ht(){var t=this,n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},i=n.queueLim,e=void 0===i?0:i,r=n.concurLim,u=void 0===r?-1:r,s=n.drop,o=void 0===s?"new":s;y.call(this),this._queueLim=e<0?-1:e,this._concurLim=u<0?-1:u,this._drop=o,this._queue=[],this._curSources=[],this._$handleSubAny=function(n){return t._handleSubAny(n)},this._$endHandlers=[],this._currentlyAdding=null,0===this._concurLim&&this._emitEnd()}function Dt(t){Ht.call(this),this._addAll(t),this._initialised=!0}function Nt(t){return 0===t.length?g():new Dt(t)}function Wt(t){var n=this;y.call(this),this._generator=t,this._source=null,this._inLoop=!1,this._iteration=0,this._$handleAny=function(t){return n._handleAny(t)}}function qt(t){return new Wt(t)}function Bt(t){return qt(function(n){return t.length>n&&t[n]}).setName("concat")}function jt(){Ht.call(this)}function Ut(t,n,i){var e=this;Ht.call(this,i),this._source=t,this._fn=n,this._mainEnded=!1,this._lastCurrent=null,this._$handleMain=function(t){return e._handleMain(t)}}function Ft(t,n){Ut.call(this,t,n)}function zt(t,n){return function(i,e,r){var u=this;t.call(this),this._primary=i,this._secondary=e,this._name=i._name+"."+n,this._lastSecondary=an,this._$handleSecondaryAny=function(t){return u._handleSecondaryAny(t)},this._$handlePrimaryAny=function(t){return u._handlePrimaryAny(t)},this._init(r)}}function Qt(t){return{_init:function(){},_free:function(){},_handlePrimaryValue:function(t){this._emitValue(t)},_handlePrimaryError:function(t){this._emitError(t)},_handlePrimaryEnd:function(){this._emitEnd()},_handleSecondaryValue:function(t){this._lastSecondary=t},_handleSecondaryError:function(t){this._emitError(t)},_handleSecondaryEnd:function(){},_handlePrimaryAny:function(t){switch(t.type){case ln:return this._handlePrimaryValue(t.value);case fn:return this._handlePrimaryError(t.value);case hn:return this._handlePrimaryEnd(t.value)}},_handleSecondaryAny:function(t){switch(t.type){case ln:return this._handleSecondaryValue(t.value);case fn:return this._handleSecondaryError(t.value);case hn:this._handleSecondaryEnd(t.value),this._removeSecondary()}},_removeSecondary:function(){null!==this._secondary&&(this._secondary.offAny(this._$handleSecondaryAny),this._$handleSecondaryAny=null,this._secondary=null)},_onActivation:function(){null!==this._secondary&&this._secondary.onAny(this._$handleSecondaryAny),this._active&&this._primary.onAny(this._$handlePrimaryAny)},_onDeactivation:function(){null!==this._secondary&&this._secondary.offAny(this._$handleSecondaryAny),this._primary.offAny(this._$handlePrimaryAny)},_clear:function(){t.prototype._clear.call(this),this._primary=null,this._secondary=null,this._lastSecondary=null,this._$handleSecondaryAny=null,this._$handlePrimaryAny=null,this._free()}}}function Yt(t,n){var i=zt(y,t);return r(i,y,Qt(y),n),i}function Kt(t,n){var i=zt(b,t);return r(i,b,Qt(b),n),i}function Rt(t,n){return new(t._ofSameType(ve,pe))(t,n)}function Gt(t,n,i){return rt([n],[t],i?function(t,n){return i(n,t)}:me).setName(t,"sampledBy")}function Jt(t,n){return new(t._ofSameType(be,ge))(t,n)}function Xt(t,n){return new(t._ofSameType(we,Ae))(t,n)}function Zt(t,n,i){return new(t._ofSameType(Ve,Te))(t,n,i)}function tn(t,n,i){return new(t._ofSameType(Ce,Oe))(t,n,i)}function nn(t,n){var i=Nt([ut(t,ke),ut(n,xe)]);return i=_t(i),i=F(i,xe),i.setName(t,"awaiting")}function en(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:Me;return new(t._ofSameType(Le,Pe))(t,{fn:n})}function rn(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:We;return new(t._ofSameType(De,Ne))(t,{fn:n})}function un(t){return new(t._ofSameType(Be,je))(t)}function sn(){Fe=!1}function on(t){if(Fe&&console&&"function"==typeof console.warn){console.warn(t,"\nHere is an Error object for you containing the call stack:",new Error)}}var an=["<nothing>"],hn="end",ln="value",fn="error",cn="any";e(p.prototype,{add:function(t,n){return this._items=u(this._items,[{type:t,fn:n}]),this._items.length},remove:function(t,n){var i=o(this._items,function(i){return i.type===t&&i.fn===n});return 0!==this._inLoop&&i!==-1&&(null===this._removedItems&&(this._removedItems=[]),this._removedItems.push(this._items[i])),this._items=h(this._items,i),this._items.length},addSpy:function(t){return this._spies=u(this._spies,[t]),this._spies.length},removeSpy:function(t){return this._spies=h(this._spies,this._spies.indexOf(t)),this._spies.length},dispatch:function(t){this._inLoop++;for(var n=0,i=this._spies;null!==this._spies&&n<i.length;n++)i[n](t);for(var e=0,r=this._items;e<r.length&&null!==this._items;e++)null!==this._removedItems&&_(this._removedItems,r[e])||v(r[e].type,r[e].fn,t);0===--this._inLoop&&(this._removedItems=null)},cleanup:function(){this._items=null,this._spies=null}}),e(m.prototype,{_name:"observable",_onActivation:function(){},_onDeactivation:function(){},_setActive:function(t){this._active!==t&&(this._active=t,t?(this._activating=!0,this._onActivation(),this._activating=!1):this._onDeactivation())},_clear:function(){this._setActive(!1),this._dispatcher.cleanup(),this._dispatcher=null,this._logHandlers=null},_emit:function(t,n){switch(t){case ln:return this._emitValue(n);case fn:return this._emitError(n);case hn:return this._emitEnd()}},_emitValue:function(t){this._alive&&this._dispatcher.dispatch({type:ln,value:t})},_emitError:function(t){this._alive&&this._dispatcher.dispatch({type:fn,value:t})},_emitEnd:function(){this._alive&&(this._alive=!1,this._dispatcher.dispatch({type:hn}),this._clear())},_on:function(t,n){return this._alive?(this._dispatcher.add(t,n),this._setActive(!0)):v(t,n,{type:hn}),this},_off:function(t,n){if(this._alive){0===this._dispatcher.remove(t,n)&&this._setActive(!1)}return this},onValue:function(t){return this._on(ln,t)},onError:function(t){return this._on(fn,t)},onEnd:function(t){return this._on(hn,t)},onAny:function(t){return this._on(cn,t)},offValue:function(t){return this._off(ln,t)},offError:function(t){return this._off(fn,t)},offEnd:function(t){return this._off(hn,t)},offAny:function(t){return this._off(cn,t)},observe:function(t,n,i){var e=this,r=!1,u=t&&"function"!=typeof t?t:{value:t,error:n,end:i},s=function(t){t.type===hn&&(r=!0),t.type===ln&&u.value?u.value(t.value):t.type===fn&&u.error?u.error(t.value):t.type===hn&&u.end&&u.end(t.value)};return this.onAny(s),{unsubscribe:function(){r||(e.offAny(s),r=!0)},get closed(){return r}}},_ofSameType:function(t,n){return t.prototype.getType()===this.getType()?t:n},setName:function(t,n){return this._name=n?t._name+"."+n:t,this},log:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.toString(),n=void 0,i=function(i){var e="<"+i.type+(n?":current":"")+">";i.type===hn?console.log(t,e):console.log(t,e,i.value)};return this._alive&&(this._logHandlers||(this._logHandlers=[]),this._logHandlers.push({name:t,handler:i})),n=!0,this.onAny(i),n=!1,this},offLog:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.toString();if(this._logHandlers){var n=o(this._logHandlers,function(n){return n.name===t});n!==-1&&(this.offAny(this._logHandlers[n].handler),this._logHandlers.splice(n,1))}return this},spy:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.toString(),n=function(n){var i="<"+n.type+">";n.type===hn?console.log(t,i):console.log(t,i,n.value)};return this._alive&&(this._spyHandlers||(this._spyHandlers=[]),this._spyHandlers.push({name:t,handler:n}),this._dispatcher.addSpy(n)),this},offSpy:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this.toString();if(this._spyHandlers){var n=o(this._spyHandlers,function(n){return n.name===t});n!==-1&&(this._dispatcher.removeSpy(this._spyHandlers[n].handler),this._spyHandlers.splice(n,1))}return this}}),m.prototype.toString=function(){return"["+this._name+"]"},r(y,m,{_name:"stream",getType:function(){return"stream"}}),r(b,m,{_name:"property",_emitValue:function(t){this._alive&&(this._currentEvent={type:ln,value:t},this._activating||this._dispatcher.dispatch({type:ln,value:t}))},_emitError:function(t){this._alive&&(this._currentEvent={type:fn,value:t},this._activating||this._dispatcher.dispatch({type:fn,value:t}))},_emitEnd:function(){this._alive&&(this._alive=!1,this._activating||this._dispatcher.dispatch({type:hn}),this._clear())},_on:function(t,n){return this._alive&&(this._dispatcher.add(t,n),this._setActive(!0)),null!==this._currentEvent&&v(t,n,this._currentEvent),this._alive||v(t,n,{type:hn}),this},getType:function(){return"property"}});var _n=new y;_n._emitEnd(),_n._name="never";var dn=E({_name:"later",_init:function(t){var n=t.x;this._x=n},_free:function(){this._x=null},_onTick:function(){this._emitValue(this._x),this._emitEnd()}}),vn=E({_name:"interval",_init:function(t){var n=t.x;this._x=n},_free:function(){this._x=null},_onTick:function(){this._emitValue(this._x)}}),pn=E({_name:"sequentially",_init:function(t){var n=t.xs;this._xs=a(n)},_free:function(){this._xs=null},_onTick:function(){1===this._xs.length?(this._emitValue(this._xs[0]),this._emitEnd()):this._emitValue(this._xs.shift())}}),mn=E({_name:"fromPoll",_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_onTick:function(){var t=this._fn;this._emitValue(t())}}),yn=E({_name:"withInterval",_init:function(t){var n=t.fn;this._fn=n,this._emitter=T(this)},_free:function(){this._fn=null,this._emitter=null},_onTick:function(){(0,this._fn)(this._emitter)}});r(C,y,{_name:"stream",_onActivation:function(){var t=this._fn,n=t(T(this));this._unsubscribe="function"==typeof n?n:null,this._active||this._callUnsubscribe()},_callUnsubscribe:function(){null!==this._unsubscribe&&(this._unsubscribe(),this._unsubscribe=null)},_onDeactivation:function(){this._callUnsubscribe()},_clear:function(){y.prototype._clear.call(this),this._fn=null}});var bn=[["addEventListener","removeEventListener"],["addListener","removeListener"],["on","off"]];r(H,b,{_name:"constant",_active:!1,_activating:!1,_alive:!1,_dispatcher:null,_logHandlers:null}),r(N,b,{_name:"constantError",_active:!1,_activating:!1,_alive:!1,_dispatcher:null,_logHandlers:null});var gn=U("toProperty",{_init:function(t){var n=t.fn;this._getInitialCurrent=n},_onActivation:function(){if(null!==this._getInitialCurrent){var t=this._getInitialCurrent;this._emitValue(t())}this._source.onAny(this._$handleAny)}}),En=j("changes",{_handleValue:function(t){this._activating||this._emitValue(t)},_handleError:function(t){this._activating||this._emitError(t)}}),wn="undefined"!=typeof window?window:void 0!==t?t:"undefined"!=typeof self?self:{},An=R(function(t,n){function i(t){var n,i=t.Symbol;return"function"==typeof i?i.observable?n=i.observable:(n=i("observable"),i.observable=n):n="@@observable",n}Object.defineProperty(n,"__esModule",{value:!0}),n.default=i}),Sn=An&&"object"==typeof An&&"default"in An?An.default:An,Vn=R(function(t,n){Object.defineProperty(n,"__esModule",{value:!0});var i,e=Sn,r=function(t){return t&&t.__esModule?t:{default:t}}(e);i="undefined"!=typeof self?self:"undefined"!=typeof window?window:void 0!==wn?wn:void 0!==t?t:Function("return this")();var u=(0,r.default)(i);n.default=u}),Tn=Vn&&"object"==typeof Vn&&"default"in Vn?Vn.default:Vn,$n=R(function(t){t.exports=Tn}),Cn=$n&&"object"==typeof $n&&"default"in $n?$n.default:$n;e(J.prototype,{subscribe:function(t,n,i){var e=this,r="function"==typeof t?{next:t,error:n,complete:i}:t,u=function(t){t.type===hn&&(s=!0),t.type===ln&&r.next?r.next(t.value):t.type===fn&&r.error?r.error(t.value):t.type===hn&&r.complete&&r.complete(t.value)};this._observable.onAny(u);var s=!1;return{unsubscribe:function(){s=!0,e._observable.offAny(u)},get closed(){return s}}}}),J.prototype[Cn]=function(){return this},r(nt,y,{_name:"combine",_onActivation:function(){this._aliveCount=this._activeCount;for(var t=this._activeCount;t<this._sources.length;t++)this._sources[t].onAny(this._$handlers[t]);for(var n=0;n<this._activeCount;n++)this._sources[n].onAny(this._$handlers[n]);this._emitAfterActivation&&(this._emitAfterActivation=!1,this._emitIfFull()),this._endAfterActivation&&this._emitEnd()},_onDeactivation:function(){var t=this._sources.length,n=void 0;for(n=0;n<t;n++)this._sources[n].offAny(this._$handlers[n])},_emitIfFull:function(){for(var t=!0,n=!1,i=this._latestValues.length,e=new Array(i),r=new Array(i),u=0;u<i;u++)e[u]=this._latestValues[u],r[u]=this._latestErrors[u],e[u]===an&&(t=!1),void 0!==r[u]&&(n=!0);if(t){var s=this._combinator;this._emitValue(s(e))}n&&this._emitError(tt(r))},_handleAny:function(t,n){n.type===ln||n.type===fn?(n.type===ln&&(this._latestValues[t]=n.value,this._latestErrors[t]=void 0),n.type===fn&&(this._latestValues[t]=an,this._latestErrors[t]={index:this._latestErrorIndex++,error:n.value}),t<this._activeCount&&(this._activating?this._emitAfterActivation=!0:this._emitIfFull())):t<this._activeCount&&0===--this._aliveCount&&(this._activating?this._endAfterActivation=!0:this._emitEnd())},_clear:function(){y.prototype._clear.call(this),this._sources=null,this._latestValues=null,this._latestErrors=null,this._combinator=null,this._$handlers=null}});var On={empty:function(){return g()},concat:function(t,n){return t.merge(n)},of:function(t){return D(t)},map:function(t,n){return n.map(t)},bimap:function(t,n,i){return i.mapErrors(t).map(n)},ap:function(t,n){return rt([t,n],function(t,n){return t(n)})},chain:function(t,n){return n.flatMap(t)}},xn=Object.freeze({Observable:On}),kn={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){var n=this._fn;this._emitValue(n(t))}},In=j("map",kn),Ln=U("map",kn),Pn=function(t){return t},Mn={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){(0,this._fn)(t)&&this._emitValue(t)}},Hn=j("filter",Mn),Dn=U("filter",Mn),Nn=function(t){return t},Wn={_init:function(t){var n=t.n;this._n=n,n<=0&&this._emitEnd()},_handleValue:function(t){this._n--,this._emitValue(t),0===this._n&&this._emitEnd()}},qn=j("take",Wn),Bn=U("take",Wn),jn={_init:function(t){var n=t.n;this._n=n,n<=0&&this._emitEnd()},_handleError:function(t){this._n--,this._emitError(t),0===this._n&&this._emitEnd()}},Un=j("takeErrors",jn),Fn=U("takeErrors",jn),zn={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){(0,this._fn)(t)?this._emitValue(t):this._emitEnd()}},Qn=j("takeWhile",zn),Yn=U("takeWhile",zn),Kn=function(t){return t},Rn={_init:function(){this._lastValue=an},_free:function(){this._lastValue=null},_handleValue:function(t){this._lastValue=t},_handleEnd:function(){this._lastValue!==an&&this._emitValue(this._lastValue),this._emitEnd()}},Gn=j("last",Rn),Jn=U("last",Rn),Xn={_init:function(t){var n=t.n;this._n=Math.max(0,n)},_handleValue:function(t){0===this._n?this._emitValue(t):this._n--}},Zn=j("skip",Xn),ti=U("skip",Xn),ni={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){var n=this._fn;null===this._fn||n(t)||(this._fn=null),null===this._fn&&this._emitValue(t)}},ii=j("skipWhile",ni),ei=U("skipWhile",ni),ri=function(t){return t},ui={_init:function(t){var n=t.fn;this._fn=n,this._prev=an},_free:function(){this._fn=null,this._prev=null},_handleValue:function(t){var n=this._fn;this._prev!==an&&n(this._prev,t)||(this._prev=t,this._emitValue(t))}},si=j("skipDuplicates",ui),oi=U("skipDuplicates",ui),ai=function(t,n){return t===n},hi={_init:function(t){var n=t.fn,i=t.seed;this._fn=n,this._prev=i},_free:function(){this._prev=null,this._fn=null},_handleValue:function(t){if(this._prev!==an){var n=this._fn;this._emitValue(n(this._prev,t))}this._prev=t}},li=j("diff",hi),fi=U("diff",hi),ci=U("scan",{_init:function(t){var n=t.fn,i=t.seed;this._fn=n,this._seed=i,i!==an&&this._emitValue(i)},_free:function(){this._fn=null,this._seed=null},_handleValue:function(t){var n=this._fn;null===this._currentEvent||this._currentEvent.type===fn?this._emitValue(this._seed===an?t:n(this._seed,t)):this._emitValue(n(this._currentEvent.value,t))}}),_i={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){for(var n=this._fn,i=n(t),e=0;e<i.length;e++)this._emitValue(i[e])}},di=j("flatten",_i),vi=function(t){return t},pi={},mi={_init:function(t){var n=this,i=t.wait;this._wait=Math.max(0,i),this._buff=[],this._$shiftBuff=function(){var t=n._buff.shift();t===pi?n._emitEnd():n._emitValue(t)}},_free:function(){this._buff=null,this._$shiftBuff=null},_handleValue:function(t){this._activating?this._emitValue(t):(this._buff.push(t),setTimeout(this._$shiftBuff,this._wait))},_handleEnd:function(){this._activating?this._emitEnd():(this._buff.push(pi),setTimeout(this._$shiftBuff,this._wait))}},yi=j("delay",mi),bi=U("delay",mi),gi=Date.now?function(){return Date.now()}:function(){return(new Date).getTime()},Ei={_init:function(t){var n=this,i=t.wait,e=t.leading,r=t.trailing;this._wait=Math.max(0,i),this._leading=e,this._trailing=r,this._trailingValue=null,this._timeoutId=null,this._endLater=!1,this._lastCallTime=0,this._$trailingCall=function(){return n._trailingCall()}},_free:function(){this._trailingValue=null,this._$trailingCall=null},_handleValue:function(t){if(this._activating)this._emitValue(t);else{var n=gi();0!==this._lastCallTime||this._leading||(this._lastCallTime=n);var i=this._wait-(n-this._lastCallTime);i<=0?(this._cancelTrailing(),this._lastCallTime=n,this._emitValue(t)):this._trailing&&(this._cancelTrailing(),this._trailingValue=t,this._timeoutId=setTimeout(this._$trailingCall,i))}},_handleEnd:function(){this._activating?this._emitEnd():this._timeoutId?this._endLater=!0:this._emitEnd()},_cancelTrailing:function(){null!==this._timeoutId&&(clearTimeout(this._timeoutId),this._timeoutId=null)},_trailingCall:function(){this._emitValue(this._trailingValue),this._timeoutId=null,this._trailingValue=null,this._lastCallTime=this._leading?gi():0,this._endLater&&this._emitEnd()}},wi=j("throttle",Ei),Ai=U("throttle",Ei),Si={_init:function(t){var n=this,i=t.wait,e=t.immediate;this._wait=Math.max(0,i),this._immediate=e,this._lastAttempt=0,this._timeoutId=null,this._laterValue=null,this._endLater=!1,this._$later=function(){return n._later()}},_free:function(){this._laterValue=null,this._$later=null},_handleValue:function(t){this._activating?this._emitValue(t):(this._lastAttempt=gi(),this._immediate&&!this._timeoutId&&this._emitValue(t),this._timeoutId||(this._timeoutId=setTimeout(this._$later,this._wait)),this._immediate||(this._laterValue=t))},_handleEnd:function(){this._activating?this._emitEnd():this._timeoutId&&!this._immediate?this._endLater=!0:this._emitEnd()},_later:function(){var t=gi()-this._lastAttempt;t<this._wait&&t>=0?this._timeoutId=setTimeout(this._$later,this._wait-t):(this._timeoutId=null,this._immediate||(this._emitValue(this._laterValue),this._laterValue=null),this._endLater&&this._emitEnd())}},Vi=j("debounce",Si),Ti=U("debounce",Si),$i={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleError:function(t){var n=this._fn;this._emitError(n(t))}},Ci=j("mapErrors",$i),Oi=U("mapErrors",$i),xi=function(t){return t},ki={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleError:function(t){(0,this._fn)(t)&&this._emitError(t)}},Ii=j("filterErrors",ki),Li=U("filterErrors",ki),Pi=function(t){return t},Mi={_handleValue:function(){}},Hi=j("ignoreValues",Mi),Di=U("ignoreValues",Mi),Ni={_handleError:function(){}},Wi=j("ignoreErrors",Ni),qi=U("ignoreErrors",Ni),Bi={_handleEnd:function(){}},ji=j("ignoreEnd",Bi),Ui=U("ignoreEnd",Bi),Fi={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleEnd:function(){var t=this._fn;this._emitValue(t()),this._emitEnd()}},zi=j("beforeEnd",Fi),Qi=U("beforeEnd",Fi),Yi={_init:function(t){var n=t.min,i=t.max;this._max=i,this._min=n,this._buff=[]},_free:function(){this._buff=null},_handleValue:function(t){this._buff=d(this._buff,t,this._max),this._buff.length>=this._min&&this._emitValue(this._buff)}},Ki=j("slidingWindow",Yi),Ri=U("slidingWindow",Yi),Gi={_init:function(t){var n=t.fn,i=t.flushOnEnd;this._fn=n,this._flushOnEnd=i,this._buff=[]},_free:function(){this._buff=null},_flush:function(){null!==this._buff&&0!==this._buff.length&&(this._emitValue(this._buff),this._buff=[])},_handleValue:function(t){this._buff.push(t),(0,this._fn)(t)||this._flush()},_handleEnd:function(){this._flushOnEnd&&this._flush(),this._emitEnd()}},Ji=j("bufferWhile",Gi),Xi=U("bufferWhile",Gi),Zi=function(t){return t},te={_init:function(t){var n=t.count,i=t.flushOnEnd;this._count=n,this._flushOnEnd=i,this._buff=[]},_free:function(){this._buff=null},_flush:function(){null!==this._buff&&0!==this._buff.length&&(this._emitValue(this._buff),this._buff=[])},_handleValue:function(t){this._buff.push(t),this._buff.length>=this._count&&this._flush()},_handleEnd:function(){this._flushOnEnd&&this._flush(),this._emitEnd()}},ne=j("bufferWithCount",te),ie=U("bufferWithCount",te),ee={_init:function(t){var n=this,i=t.wait,e=t.count,r=t.flushOnEnd;this._wait=i,this._count=e,this._flushOnEnd=r,this._intervalId=null,this._$onTick=function(){return n._flush()},this._buff=[]},_free:function(){this._$onTick=null,this._buff=null},_flush:function(){null!==this._buff&&(this._emitValue(this._buff),this._buff=[])},_handleValue:function(t){this._buff.push(t),this._buff.length>=this._count&&(clearInterval(this._intervalId),this._flush(),this._intervalId=setInterval(this._$onTick,this._wait))},_handleEnd:function(){this._flushOnEnd&&0!==this._buff.length&&this._flush(),this._emitEnd()},_onActivation:function(){this._intervalId=setInterval(this._$onTick,this._wait),this._source.onAny(this._$handleAny)},_onDeactivation:function(){null!==this._intervalId&&(clearInterval(this._intervalId),this._intervalId=null),this._source.offAny(this._$handleAny)}},re=j("bufferWithTimeOrCount",ee),ue=U("bufferWithTimeOrCount",ee),se={_init:function(t){var n=t.transducer;this._xform=n(kt(this))},_free:function(){this._xform=null},_handleValue:function(t){null!==this._xform["@@transducer/step"](null,t)&&this._xform["@@transducer/result"](null)},_handleEnd:function(){this._xform["@@transducer/result"](null)}},oe=j("transduce",se),ae=U("transduce",se),he={_init:function(t){var n=t.fn;this._handler=n,this._emitter=T(this)},_free:function(){this._handler=null,this._emitter=null},_handleAny:function(t){this._handler(this._emitter,t)}},le=j("withHandler",he),fe=U("withHandler",he),ce=Array.isArray||function(t){return"[object Array]"===Object.prototype.toString.call(t)};r(Pt,y,{_name:"zip",_onActivation:function(){for(;this._isFull();)this._emit();var t=this._sources.length;this._aliveCount=t;for(var n=0;n<t&&this._active;n++)this._sources[n].onAny(this._$handlers[n])},_onDeactivation:function(){for(var t=0;t<this._sources.length;t++)this._sources[t].offAny(this._$handlers[t])},_emit:function(){for(var t=new Array(this._buffers.length),n=0;n<this._buffers.length;n++)t[n]=this._buffers[n].shift();var i=this._combinator;this._emitValue(i(t))},_isFull:function(){for(var t=0;t<this._buffers.length;t++)if(0===this._buffers[t].length)return!1;return!0},_handleAny:function(t,n){n.type===ln&&(this._buffers[t].push(n.value),this._isFull()&&this._emit()),n.type===fn&&this._emitError(n.value),n.type===hn&&0===--this._aliveCount&&this._emitEnd()},_clear:function(){y.prototype._clear.call(this),this._sources=null,this._buffers=null,this._combinator=null,this._$handlers=null}});var _e=function(t){return t};r(Ht,y,{_name:"abstractPool",_add:function(t,n){n=n||_e,this._concurLim===-1||this._curSources.length<this._concurLim?this._addToCur(n(t)):this._queueLim===-1||this._queue.length<this._queueLim?this._addToQueue(n(t)):"old"===this._drop&&(this._removeOldest(),this._add(t,n))},_addAll:function(t){var n=this;f(t,function(t){return n._add(t)})},_remove:function(t){this._removeCur(t)===-1&&this._removeQueue(t)},_addToQueue:function(t){this._queue=u(this._queue,[t])},_addToCur:function(t){if(this._active){if(!t._alive)return void(t._currentEvent&&this._emit(t._currentEvent.type,t._currentEvent.value));this._currentlyAdding=t,t.onAny(this._$handleSubAny),this._currentlyAdding=null,t._alive&&(this._curSources=u(this._curSources,[t]),this._active&&this._subToEnd(t))}else this._curSources=u(this._curSources,[t])},_subToEnd:function(t){var n=this,i=function(){return n._removeCur(t)};this._$endHandlers.push({obs:t,handler:i}),t.onEnd(i)},_subscribe:function(t){t.onAny(this._$handleSubAny),this._active&&this._subToEnd(t)},_unsubscribe:function(t){t.offAny(this._$handleSubAny);var n=o(this._$endHandlers,function(n){return n.obs===t});n!==-1&&(t.offEnd(this._$endHandlers[n].handler),this._$endHandlers.splice(n,1))},_handleSubAny:function(t){t.type===ln?this._emitValue(t.value):t.type===fn&&this._emitError(t.value)},_removeQueue:function(t){var n=s(this._queue,t);return this._queue=h(this._queue,n),n},_removeCur:function(t){this._active&&this._unsubscribe(t);var n=s(this._curSources,t);return this._curSources=h(this._curSources,n),n!==-1&&(0!==this._queue.length?this._pullQueue():0===this._curSources.length&&this._onEmpty()),n},_removeOldest:function(){this._removeCur(this._curSources[0])},_pullQueue:function(){0!==this._queue.length&&(this._queue=a(this._queue),this._addToCur(this._queue.shift()))},_onActivation:function(){for(var t=0,n=this._curSources;t<n.length&&this._active;t++)this._subscribe(n[t])},_onDeactivation:function(){for(var t=0,n=this._curSources;t<n.length;t++)this._unsubscribe(n[t]);null!==this._currentlyAdding&&this._unsubscribe(this._currentlyAdding)},_isEmpty:function(){return 0===this._curSources.length},_onEmpty:function(){},_clear:function(){y.prototype._clear.call(this),this._queue=null,this._curSources=null,this._$handleSubAny=null,this._$endHandlers=null}}),r(Dt,Ht,{_name:"merge",_onEmpty:function(){this._initialised&&this._emitEnd()}}),r(Wt,y,{_name:"repeat",_handleAny:function(t){t.type===hn?(this._source=null,this._getSource()):this._emit(t.type,t.value)},_getSource:function(){if(!this._inLoop){this._inLoop=!0;for(var t=this._generator;null===this._source&&this._alive&&this._active;)this._source=t(this._iteration++),this._source?this._source.onAny(this._$handleAny):this._emitEnd();this._inLoop=!1}},_onActivation:function(){this._source?this._source.onAny(this._$handleAny):this._getSource()},_onDeactivation:function(){this._source&&this._source.offAny(this._$handleAny)},_clear:function(){y.prototype._clear.call(this),this._generator=null,this._source=null,this._$handleAny=null}}),r(jt,Ht,{_name:"pool",plug:function(t){return this._add(t),this},unplug:function(t){return this._remove(t),this}}),r(Ut,Ht,{_onActivation:function(){Ht.prototype._onActivation.call(this),this._active&&this._source.onAny(this._$handleMain)},_onDeactivation:function(){Ht.prototype._onDeactivation.call(this),this._source.offAny(this._$handleMain),this._hadNoEvSinceDeact=!0},_handleMain:function(t){if(t.type===ln){this._activating&&this._hadNoEvSinceDeact&&this._lastCurrent===t.value||this._add(t.value,this._fn),this._lastCurrent=t.value,this._hadNoEvSinceDeact=!1}t.type===fn&&this._emitError(t.value),t.type===hn&&(this._isEmpty()?this._emitEnd():this._mainEnded=!0)},_onEmpty:function(){this._mainEnded&&this._emitEnd()},_clear:function(){Ht.prototype._clear.call(this),this._source=null,this._lastCurrent=null,this._$handleMain=null}}),r(Ft,Ut,{_handleMain:function(t){if(t.type===fn){this._activating&&this._hadNoEvSinceDeact&&this._lastCurrent===t.value||this._add(t.value,this._fn),this._lastCurrent=t.value,this._hadNoEvSinceDeact=!1}t.type===ln&&this._emitValue(t.value),t.type===hn&&(this._isEmpty()?this._emitEnd():this._mainEnded=!0)}});var de={_handlePrimaryValue:function(t){this._lastSecondary!==an&&this._lastSecondary&&this._emitValue(t)},_handleSecondaryEnd:function(){this._lastSecondary!==an&&this._lastSecondary||this._emitEnd()}},ve=Yt("filterBy",de),pe=Kt("filterBy",de),me=function(t,n){return n},ye={_handlePrimaryValue:function(t){this._lastSecondary!==an&&this._emitValue(t)},_handleSecondaryEnd:function(){this._lastSecondary===an&&this._emitEnd()}},be=Yt("skipUntilBy",ye),ge=Kt("skipUntilBy",ye),Ee={_handleSecondaryValue:function(){this._emitEnd()}},we=Yt("takeUntilBy",Ee),Ae=Kt("takeUntilBy",Ee),Se={_init:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=t.flushOnEnd,i=void 0===n||n;this._buff=[],this._flushOnEnd=i},_free:function(){this._buff=null},_flush:function(){null!==this._buff&&(this._emitValue(this._buff),this._buff=[])},_handlePrimaryEnd:function(){this._flushOnEnd&&this._flush(),this._emitEnd()},_onActivation:function(){this._primary.onAny(this._$handlePrimaryAny),this._alive&&null!==this._secondary&&this._secondary.onAny(this._$handleSecondaryAny)},_handlePrimaryValue:function(t){this._buff.push(t)},_handleSecondaryValue:function(){this._flush()},_handleSecondaryEnd:function(){this._flushOnEnd||this._emitEnd()}},Ve=Yt("bufferBy",Se),Te=Kt("bufferBy",Se),$e={_init:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},n=t.flushOnEnd,i=void 0===n||n,e=t.flushOnChange,r=void 0!==e&&e;this._buff=[],this._flushOnEnd=i,this._flushOnChange=r},_free:function(){this._buff=null},_flush:function(){null!==this._buff&&(this._emitValue(this._buff),this._buff=[])},_handlePrimaryEnd:function(){this._flushOnEnd&&this._flush(),this._emitEnd()},_handlePrimaryValue:function(t){this._buff.push(t),this._lastSecondary===an||this._lastSecondary||this._flush()},_handleSecondaryEnd:function(){this._flushOnEnd||this._lastSecondary!==an&&!this._lastSecondary||this._emitEnd()},_handleSecondaryValue:function(t){this._flushOnChange&&!t&&this._flush(),this._lastSecondary=t}},Ce=Yt("bufferWhileBy",$e),Oe=Kt("bufferWhileBy",$e),xe=function(){return!1},ke=function(){return!0},Ie={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleValue:function(t){var n=this._fn,i=n(t);i.convert?this._emitError(i.error):this._emitValue(t)}},Le=j("valuesToErrors",Ie),Pe=U("valuesToErrors",Ie),Me=function(t){return{convert:!0,error:t}},He={_init:function(t){var n=t.fn;this._fn=n},_free:function(){this._fn=null},_handleError:function(t){var n=this._fn,i=n(t);i.convert?this._emitValue(i.value):this._emitError(t)}},De=j("errorsToValues",He),Ne=U("errorsToValues",He),We=function(t){return{convert:!0,value:t}},qe={_handleError:function(t){this._emitError(t),this._emitEnd()}},Be=j("endOnError",qe),je=U("endOnError",qe);m.prototype.toProperty=function(t){return F(this,t)},m.prototype.changes=function(){return z(this)},m.prototype.toPromise=function(t){return K(this,t)},m.prototype.toESObservable=X,m.prototype[Cn]=X,m.prototype.map=function(t){return ut(this,t)},m.prototype.filter=function(t){return st(this,t)},m.prototype.take=function(t){return ot(this,t)},m.prototype.takeErrors=function(t){return at(this,t)},m.prototype.takeWhile=function(t){return ht(this,t)},m.prototype.last=function(){return lt(this)},m.prototype.skip=function(t){return ft(this,t)},m.prototype.skipWhile=function(t){return ct(this,t)},m.prototype.skipDuplicates=function(t){return _t(this,t)},m.prototype.diff=function(t,n){return vt(this,t,n)},m.prototype.scan=function(t,n){return pt(this,t,n)},m.prototype.flatten=function(t){return mt(this,t)},m.prototype.delay=function(t){return yt(this,t)},m.prototype.throttle=function(t,n){return bt(this,t,n)},m.prototype.debounce=function(t,n){return gt(this,t,n)},m.prototype.mapErrors=function(t){return Et(this,t)},m.prototype.filterErrors=function(t){return wt(this,t)},m.prototype.ignoreValues=function(){return At(this)},m.prototype.ignoreErrors=function(){return St(this)},m.prototype.ignoreEnd=function(){return Vt(this)},m.prototype.beforeEnd=function(t){return Tt(this,t)},m.prototype.slidingWindow=function(t,n){return $t(this,t,n)},m.prototype.bufferWhile=function(t,n){return Ct(this,t,n)},m.prototype.bufferWithCount=function(t,n){return Ot(this,t,n)},m.prototype.bufferWithTimeOrCount=function(t,n,i){return xt(this,t,n,i)},m.prototype.transduce=function(t){return It(this,t)},m.prototype.withHandler=function(t){return Lt(this,t)},m.prototype.combine=function(t,n){return rt([this,t],n)},m.prototype.zip=function(t,n){return Mt([this,t],n)},m.prototype.merge=function(t){return Nt([this,t])},m.prototype.concat=function(t){return Bt([this,t])};var Ue=function(){return new jt};m.prototype.flatMap=function(t){return new Ut(this,t).setName(this,"flatMap")},m.prototype.flatMapLatest=function(t){return new Ut(this,t,{concurLim:1,drop:"old"}).setName(this,"flatMapLatest")},m.prototype.flatMapFirst=function(t){return new Ut(this,t,{concurLim:1}).setName(this,"flatMapFirst")},m.prototype.flatMapConcat=function(t){return new Ut(this,t,{queueLim:-1,concurLim:1}).setName(this,"flatMapConcat")},m.prototype.flatMapConcurLimit=function(t,n){return new Ut(this,t,{queueLim:-1,concurLim:n}).setName(this,"flatMapConcurLimit")},m.prototype.flatMapErrors=function(t){return new Ft(this,t).setName(this,"flatMapErrors")},m.prototype.filterBy=function(t){return Rt(this,t)},m.prototype.sampledBy=function(t,n){return Gt(this,t,n)},m.prototype.skipUntilBy=function(t){return Jt(this,t)},m.prototype.takeUntilBy=function(t){return Xt(this,t)},m.prototype.bufferBy=function(t,n){return Zt(this,t,n)},m.prototype.bufferWhileBy=function(t,n){return tn(this,t,n)};var Fe=!0;m.prototype.awaiting=function(t){return on("You are using deprecated .awaiting() method, see https://github.com/rpominov/kefir/issues/145"),nn(this,t)},m.prototype.valuesToErrors=function(t){return on("You are using deprecated .valuesToErrors() method, see https://github.com/rpominov/kefir/issues/149"),en(this,t)},m.prototype.errorsToValues=function(t){return on("You are using deprecated .errorsToValues() method, see https://github.com/rpominov/kefir/issues/149"),rn(this,t)},m.prototype.endOnError=function(){return on("You are using deprecated .endOnError() method, see https://github.com/rpominov/kefir/issues/150"),un(this)};var ze={Observable:m,Stream:y,Property:b,never:g,later:w,interval:A,sequentially:S,fromPoll:V,withInterval:$,fromCallback:x,fromNodeCallback:k,fromEvents:M,stream:O,constant:D,constantError:W,fromPromise:Q,fromESObservable:G,combine:rt,zip:Mt,merge:Nt,concat:Bt,Pool:jt,pool:Ue,repeat:qt,staticLand:xn};ze.Kefir=ze,n.dissableDeprecationWarnings=sn,n.Kefir=ze,n.Observable=m,n.Stream=y,n.Property=b,n.never=g,n.later=w,n.interval=A,n.sequentially=S,n.fromPoll=V,n.withInterval=$,n.fromCallback=x,n.fromNodeCallback=k,n.fromEvents=M,n.stream=O,n.constant=D,n.constantError=W,n.fromPromise=Q,n.fromESObservable=G,n.combine=rt,n.zip=Mt,n.merge=Nt,n.concat=Bt,n.Pool=jt,n.pool=Ue,n.repeat=qt,n.staticLand=xn,n.default=ze,Object.defineProperty(n,"__esModule",{value:!0})})}).call(n,i(3))},function(t,n){var i;i=function(){return this}();try{i=i||Function("return this")()||(0,eval)("this")}catch(t){"object"==typeof window&&(i=window)}t.exports=i}]);
+
+(function (global, factory) {
+	 true ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.Kefir = global.Kefir || {})));
+}(this, (function (exports) { 'use strict';
+
+function createObj(proto) {
+  var F = function () {};
+  F.prototype = proto;
+  return new F();
+}
+
+function extend(target /*, mixin1, mixin2...*/) {
+  var length = arguments.length,
+      i = void 0,
+      prop = void 0;
+  for (i = 1; i < length; i++) {
+    for (prop in arguments[i]) {
+      target[prop] = arguments[i][prop];
+    }
+  }
+  return target;
+}
+
+function inherit(Child, Parent /*, mixin1, mixin2...*/) {
+  var length = arguments.length,
+      i = void 0;
+  Child.prototype = createObj(Parent.prototype);
+  Child.prototype.constructor = Child;
+  for (i = 2; i < length; i++) {
+    extend(Child.prototype, arguments[i]);
+  }
+  return Child;
+}
+
+var NOTHING = ['<nothing>'];
+var END = 'end';
+var VALUE = 'value';
+var ERROR = 'error';
+var ANY = 'any';
+
+function concat(a, b) {
+  var result = void 0,
+      length = void 0,
+      i = void 0,
+      j = void 0;
+  if (a.length === 0) {
+    return b;
+  }
+  if (b.length === 0) {
+    return a;
+  }
+  j = 0;
+  result = new Array(a.length + b.length);
+  length = a.length;
+  for (i = 0; i < length; i++, j++) {
+    result[j] = a[i];
+  }
+  length = b.length;
+  for (i = 0; i < length; i++, j++) {
+    result[j] = b[i];
+  }
+  return result;
+}
+
+function find(arr, value) {
+  var length = arr.length,
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    if (arr[i] === value) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function findByPred(arr, pred) {
+  var length = arr.length,
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    if (pred(arr[i])) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function cloneArray(input) {
+  var length = input.length,
+      result = new Array(length),
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    result[i] = input[i];
+  }
+  return result;
+}
+
+function remove(input, index) {
+  var length = input.length,
+      result = void 0,
+      i = void 0,
+      j = void 0;
+  if (index >= 0 && index < length) {
+    if (length === 1) {
+      return [];
+    } else {
+      result = new Array(length - 1);
+      for (i = 0, j = 0; i < length; i++) {
+        if (i !== index) {
+          result[j] = input[i];
+          j++;
+        }
+      }
+      return result;
+    }
+  } else {
+    return input;
+  }
+}
+
+function map(input, fn) {
+  var length = input.length,
+      result = new Array(length),
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    result[i] = fn(input[i]);
+  }
+  return result;
+}
+
+function forEach(arr, fn) {
+  var length = arr.length,
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    fn(arr[i]);
+  }
+}
+
+function fillArray(arr, value) {
+  var length = arr.length,
+      i = void 0;
+  for (i = 0; i < length; i++) {
+    arr[i] = value;
+  }
+}
+
+function contains(arr, value) {
+  return find(arr, value) !== -1;
+}
+
+function slide(cur, next, max) {
+  var length = Math.min(max, cur.length + 1),
+      offset = cur.length - length + 1,
+      result = new Array(length),
+      i = void 0;
+  for (i = offset; i < length; i++) {
+    result[i - offset] = cur[i];
+  }
+  result[length - 1] = next;
+  return result;
+}
+
+function callSubscriber(type, fn, event) {
+  if (type === ANY) {
+    fn(event);
+  } else if (type === event.type) {
+    if (type === VALUE || type === ERROR) {
+      fn(event.value);
+    } else {
+      fn();
+    }
+  }
+}
+
+function Dispatcher() {
+  this._items = [];
+  this._spies = [];
+  this._inLoop = 0;
+  this._removedItems = null;
+}
+
+extend(Dispatcher.prototype, {
+  add: function (type, fn) {
+    this._items = concat(this._items, [{ type: type, fn: fn }]);
+    return this._items.length;
+  },
+  remove: function (type, fn) {
+    var index = findByPred(this._items, function (x) {
+      return x.type === type && x.fn === fn;
+    });
+
+    // if we're currently in a notification loop,
+    // remember this subscriber was removed
+    if (this._inLoop !== 0 && index !== -1) {
+      if (this._removedItems === null) {
+        this._removedItems = [];
+      }
+      this._removedItems.push(this._items[index]);
+    }
+
+    this._items = remove(this._items, index);
+    return this._items.length;
+  },
+  addSpy: function (fn) {
+    this._spies = concat(this._spies, [fn]);
+    return this._spies.length;
+  },
+
+
+  // Because spies are only ever a function that perform logging as
+  // their only side effect, we don't need the same complicated
+  // removal logic like in remove()
+  removeSpy: function (fn) {
+    this._spies = remove(this._spies, this._spies.indexOf(fn));
+    return this._spies.length;
+  },
+  dispatch: function (event) {
+    this._inLoop++;
+    for (var i = 0, spies = this._spies; this._spies !== null && i < spies.length; i++) {
+      spies[i](event);
+    }
+
+    for (var _i = 0, items = this._items; _i < items.length; _i++) {
+      // cleanup was called
+      if (this._items === null) {
+        break;
+      }
+
+      // this subscriber was removed
+      if (this._removedItems !== null && contains(this._removedItems, items[_i])) {
+        continue;
+      }
+
+      callSubscriber(items[_i].type, items[_i].fn, event);
+    }
+    this._inLoop--;
+    if (this._inLoop === 0) {
+      this._removedItems = null;
+    }
+  },
+  cleanup: function () {
+    this._items = null;
+    this._spies = null;
+  }
+});
+
+function Observable() {
+  this._dispatcher = new Dispatcher();
+  this._active = false;
+  this._alive = true;
+  this._activating = false;
+  this._logHandlers = null;
+  this._spyHandlers = null;
+}
+
+extend(Observable.prototype, {
+  _name: 'observable',
+
+  _onActivation: function () {},
+  _onDeactivation: function () {},
+  _setActive: function (active) {
+    if (this._active !== active) {
+      this._active = active;
+      if (active) {
+        this._activating = true;
+        this._onActivation();
+        this._activating = false;
+      } else {
+        this._onDeactivation();
+      }
+    }
+  },
+  _clear: function () {
+    this._setActive(false);
+    this._dispatcher.cleanup();
+    this._dispatcher = null;
+    this._logHandlers = null;
+  },
+  _emit: function (type, x) {
+    switch (type) {
+      case VALUE:
+        return this._emitValue(x);
+      case ERROR:
+        return this._emitError(x);
+      case END:
+        return this._emitEnd();
+    }
+  },
+  _emitValue: function (value) {
+    if (this._alive) {
+      this._dispatcher.dispatch({ type: VALUE, value: value });
+    }
+  },
+  _emitError: function (value) {
+    if (this._alive) {
+      this._dispatcher.dispatch({ type: ERROR, value: value });
+    }
+  },
+  _emitEnd: function () {
+    if (this._alive) {
+      this._alive = false;
+      this._dispatcher.dispatch({ type: END });
+      this._clear();
+    }
+  },
+  _on: function (type, fn) {
+    if (this._alive) {
+      this._dispatcher.add(type, fn);
+      this._setActive(true);
+    } else {
+      callSubscriber(type, fn, { type: END });
+    }
+    return this;
+  },
+  _off: function (type, fn) {
+    if (this._alive) {
+      var count = this._dispatcher.remove(type, fn);
+      if (count === 0) {
+        this._setActive(false);
+      }
+    }
+    return this;
+  },
+  onValue: function (fn) {
+    return this._on(VALUE, fn);
+  },
+  onError: function (fn) {
+    return this._on(ERROR, fn);
+  },
+  onEnd: function (fn) {
+    return this._on(END, fn);
+  },
+  onAny: function (fn) {
+    return this._on(ANY, fn);
+  },
+  offValue: function (fn) {
+    return this._off(VALUE, fn);
+  },
+  offError: function (fn) {
+    return this._off(ERROR, fn);
+  },
+  offEnd: function (fn) {
+    return this._off(END, fn);
+  },
+  offAny: function (fn) {
+    return this._off(ANY, fn);
+  },
+  observe: function (observerOrOnValue, onError, onEnd) {
+    var _this = this;
+    var closed = false;
+
+    var observer = !observerOrOnValue || typeof observerOrOnValue === 'function' ? { value: observerOrOnValue, error: onError, end: onEnd } : observerOrOnValue;
+
+    var handler = function (event) {
+      if (event.type === END) {
+        closed = true;
+      }
+      if (event.type === VALUE && observer.value) {
+        observer.value(event.value);
+      } else if (event.type === ERROR && observer.error) {
+        observer.error(event.value);
+      } else if (event.type === END && observer.end) {
+        observer.end(event.value);
+      }
+    };
+
+    this.onAny(handler);
+
+    return {
+      unsubscribe: function () {
+        if (!closed) {
+          _this.offAny(handler);
+          closed = true;
+        }
+      },
+
+      get closed() {
+        return closed;
+      }
+    };
+  },
+
+
+  // A and B must be subclasses of Stream and Property (order doesn't matter)
+  _ofSameType: function (A, B) {
+    return A.prototype.getType() === this.getType() ? A : B;
+  },
+  setName: function (sourceObs /* optional */, selfName) {
+    this._name = selfName ? sourceObs._name + '.' + selfName : sourceObs;
+    return this;
+  },
+  log: function () {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.toString();
+
+    var isCurrent = void 0;
+    var handler = function (event) {
+      var type = '<' + event.type + (isCurrent ? ':current' : '') + '>';
+      if (event.type === END) {
+        console.log(name, type);
+      } else {
+        console.log(name, type, event.value);
+      }
+    };
+
+    if (this._alive) {
+      if (!this._logHandlers) {
+        this._logHandlers = [];
+      }
+      this._logHandlers.push({ name: name, handler: handler });
+    }
+
+    isCurrent = true;
+    this.onAny(handler);
+    isCurrent = false;
+
+    return this;
+  },
+  offLog: function () {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.toString();
+
+    if (this._logHandlers) {
+      var handlerIndex = findByPred(this._logHandlers, function (obj) {
+        return obj.name === name;
+      });
+      if (handlerIndex !== -1) {
+        this.offAny(this._logHandlers[handlerIndex].handler);
+        this._logHandlers.splice(handlerIndex, 1);
+      }
+    }
+
+    return this;
+  },
+  spy: function () {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.toString();
+
+    var handler = function (event) {
+      var type = '<' + event.type + '>';
+      if (event.type === END) {
+        console.log(name, type);
+      } else {
+        console.log(name, type, event.value);
+      }
+    };
+    if (this._alive) {
+      if (!this._spyHandlers) {
+        this._spyHandlers = [];
+      }
+      this._spyHandlers.push({ name: name, handler: handler });
+      this._dispatcher.addSpy(handler);
+    }
+    return this;
+  },
+  offSpy: function () {
+    var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.toString();
+
+    if (this._spyHandlers) {
+      var handlerIndex = findByPred(this._spyHandlers, function (obj) {
+        return obj.name === name;
+      });
+      if (handlerIndex !== -1) {
+        this._dispatcher.removeSpy(this._spyHandlers[handlerIndex].handler);
+        this._spyHandlers.splice(handlerIndex, 1);
+      }
+    }
+    return this;
+  }
+});
+
+// extend() can't handle `toString` in IE8
+Observable.prototype.toString = function () {
+  return '[' + this._name + ']';
+};
+
+function Stream() {
+  Observable.call(this);
+}
+
+inherit(Stream, Observable, {
+  _name: 'stream',
+
+  getType: function () {
+    return 'stream';
+  }
+});
+
+function Property() {
+  Observable.call(this);
+  this._currentEvent = null;
+}
+
+inherit(Property, Observable, {
+  _name: 'property',
+
+  _emitValue: function (value) {
+    if (this._alive) {
+      this._currentEvent = { type: VALUE, value: value };
+      if (!this._activating) {
+        this._dispatcher.dispatch({ type: VALUE, value: value });
+      }
+    }
+  },
+  _emitError: function (value) {
+    if (this._alive) {
+      this._currentEvent = { type: ERROR, value: value };
+      if (!this._activating) {
+        this._dispatcher.dispatch({ type: ERROR, value: value });
+      }
+    }
+  },
+  _emitEnd: function () {
+    if (this._alive) {
+      this._alive = false;
+      if (!this._activating) {
+        this._dispatcher.dispatch({ type: END });
+      }
+      this._clear();
+    }
+  },
+  _on: function (type, fn) {
+    if (this._alive) {
+      this._dispatcher.add(type, fn);
+      this._setActive(true);
+    }
+    if (this._currentEvent !== null) {
+      callSubscriber(type, fn, this._currentEvent);
+    }
+    if (!this._alive) {
+      callSubscriber(type, fn, { type: END });
+    }
+    return this;
+  },
+  getType: function () {
+    return 'property';
+  }
+});
+
+var neverS = new Stream();
+neverS._emitEnd();
+neverS._name = 'never';
+
+function never() {
+  return neverS;
+}
+
+function timeBased(mixin) {
+  function AnonymousStream(wait, options) {
+    var _this = this;
+
+    Stream.call(this);
+    this._wait = wait;
+    this._intervalId = null;
+    this._$onTick = function () {
+      return _this._onTick();
+    };
+    this._init(options);
+  }
+
+  inherit(AnonymousStream, Stream, {
+    _init: function () {},
+    _free: function () {},
+    _onTick: function () {},
+    _onActivation: function () {
+      this._intervalId = setInterval(this._$onTick, this._wait);
+    },
+    _onDeactivation: function () {
+      if (this._intervalId !== null) {
+        clearInterval(this._intervalId);
+        this._intervalId = null;
+      }
+    },
+    _clear: function () {
+      Stream.prototype._clear.call(this);
+      this._$onTick = null;
+      this._free();
+    }
+  }, mixin);
+
+  return AnonymousStream;
+}
+
+var S = timeBased({
+  _name: 'later',
+
+  _init: function (_ref) {
+    var x = _ref.x;
+
+    this._x = x;
+  },
+  _free: function () {
+    this._x = null;
+  },
+  _onTick: function () {
+    this._emitValue(this._x);
+    this._emitEnd();
+  }
+});
+
+function later(wait, x) {
+  return new S(wait, { x: x });
+}
+
+var S$1 = timeBased({
+  _name: 'interval',
+
+  _init: function (_ref) {
+    var x = _ref.x;
+
+    this._x = x;
+  },
+  _free: function () {
+    this._x = null;
+  },
+  _onTick: function () {
+    this._emitValue(this._x);
+  }
+});
+
+function interval(wait, x) {
+  return new S$1(wait, { x: x });
+}
+
+var S$2 = timeBased({
+  _name: 'sequentially',
+
+  _init: function (_ref) {
+    var xs = _ref.xs;
+
+    this._xs = cloneArray(xs);
+  },
+  _free: function () {
+    this._xs = null;
+  },
+  _onTick: function () {
+    if (this._xs.length === 1) {
+      this._emitValue(this._xs[0]);
+      this._emitEnd();
+    } else {
+      this._emitValue(this._xs.shift());
+    }
+  }
+});
+
+function sequentially(wait, xs) {
+  return xs.length === 0 ? never() : new S$2(wait, { xs: xs });
+}
+
+var S$3 = timeBased({
+  _name: 'fromPoll',
+
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _onTick: function () {
+    var fn = this._fn;
+    this._emitValue(fn());
+  }
+});
+
+function fromPoll(wait, fn) {
+  return new S$3(wait, { fn: fn });
+}
+
+function emitter(obs) {
+  function value(x) {
+    obs._emitValue(x);
+    return obs._active;
+  }
+
+  function error(x) {
+    obs._emitError(x);
+    return obs._active;
+  }
+
+  function end() {
+    obs._emitEnd();
+    return obs._active;
+  }
+
+  function event(e) {
+    obs._emit(e.type, e.value);
+    return obs._active;
+  }
+
+  return {
+    value: value,
+    error: error,
+    end: end,
+    event: event,
+
+    // legacy
+    emit: value,
+    emitEvent: event
+  };
+}
+
+var S$4 = timeBased({
+  _name: 'withInterval',
+
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+    this._emitter = emitter(this);
+  },
+  _free: function () {
+    this._fn = null;
+    this._emitter = null;
+  },
+  _onTick: function () {
+    var fn = this._fn;
+    fn(this._emitter);
+  }
+});
+
+function withInterval(wait, fn) {
+  return new S$4(wait, { fn: fn });
+}
+
+function S$5(fn) {
+  Stream.call(this);
+  this._fn = fn;
+  this._unsubscribe = null;
+}
+
+inherit(S$5, Stream, {
+  _name: 'stream',
+
+  _onActivation: function () {
+    var fn = this._fn;
+    var unsubscribe = fn(emitter(this));
+    this._unsubscribe = typeof unsubscribe === 'function' ? unsubscribe : null;
+
+    // fix https://github.com/rpominov/kefir/issues/35
+    if (!this._active) {
+      this._callUnsubscribe();
+    }
+  },
+  _callUnsubscribe: function () {
+    if (this._unsubscribe !== null) {
+      this._unsubscribe();
+      this._unsubscribe = null;
+    }
+  },
+  _onDeactivation: function () {
+    this._callUnsubscribe();
+  },
+  _clear: function () {
+    Stream.prototype._clear.call(this);
+    this._fn = null;
+  }
+});
+
+function stream(fn) {
+  return new S$5(fn);
+}
+
+function fromCallback(callbackConsumer) {
+  var called = false;
+
+  return stream(function (emitter) {
+    if (!called) {
+      callbackConsumer(function (x) {
+        emitter.emit(x);
+        emitter.end();
+      });
+      called = true;
+    }
+  }).setName('fromCallback');
+}
+
+function fromNodeCallback(callbackConsumer) {
+  var called = false;
+
+  return stream(function (emitter) {
+    if (!called) {
+      callbackConsumer(function (error, x) {
+        if (error) {
+          emitter.error(error);
+        } else {
+          emitter.emit(x);
+        }
+        emitter.end();
+      });
+      called = true;
+    }
+  }).setName('fromNodeCallback');
+}
+
+function spread(fn, length) {
+  switch (length) {
+    case 0:
+      return function () {
+        return fn();
+      };
+    case 1:
+      return function (a) {
+        return fn(a[0]);
+      };
+    case 2:
+      return function (a) {
+        return fn(a[0], a[1]);
+      };
+    case 3:
+      return function (a) {
+        return fn(a[0], a[1], a[2]);
+      };
+    case 4:
+      return function (a) {
+        return fn(a[0], a[1], a[2], a[3]);
+      };
+    default:
+      return function (a) {
+        return fn.apply(null, a);
+      };
+  }
+}
+
+function apply(fn, c, a) {
+  var aLength = a ? a.length : 0;
+  if (c == null) {
+    switch (aLength) {
+      case 0:
+        return fn();
+      case 1:
+        return fn(a[0]);
+      case 2:
+        return fn(a[0], a[1]);
+      case 3:
+        return fn(a[0], a[1], a[2]);
+      case 4:
+        return fn(a[0], a[1], a[2], a[3]);
+      default:
+        return fn.apply(null, a);
+    }
+  } else {
+    switch (aLength) {
+      case 0:
+        return fn.call(c);
+      default:
+        return fn.apply(c, a);
+    }
+  }
+}
+
+function fromSubUnsub(sub, unsub, transformer /* Function | falsey */) {
+  return stream(function (emitter) {
+    var handler = transformer ? function () {
+      emitter.emit(apply(transformer, this, arguments));
+    } : function (x) {
+      emitter.emit(x);
+    };
+
+    sub(handler);
+    return function () {
+      return unsub(handler);
+    };
+  }).setName('fromSubUnsub');
+}
+
+var pairs = [['addEventListener', 'removeEventListener'], ['addListener', 'removeListener'], ['on', 'off']];
+
+function fromEvents(target, eventName, transformer) {
+  var sub = void 0,
+      unsub = void 0;
+
+  for (var i = 0; i < pairs.length; i++) {
+    if (typeof target[pairs[i][0]] === 'function' && typeof target[pairs[i][1]] === 'function') {
+      sub = pairs[i][0];
+      unsub = pairs[i][1];
+      break;
+    }
+  }
+
+  if (sub === undefined) {
+    throw new Error("target don't support any of " + 'addEventListener/removeEventListener, addListener/removeListener, on/off method pair');
+  }
+
+  return fromSubUnsub(function (handler) {
+    return target[sub](eventName, handler);
+  }, function (handler) {
+    return target[unsub](eventName, handler);
+  }, transformer).setName('fromEvents');
+}
+
+// HACK:
+//   We don't call parent Class constructor, but instead putting all necessary
+//   properties into prototype to simulate ended Property
+//   (see Propperty and Observable classes).
+
+function P(value) {
+  this._currentEvent = { type: 'value', value: value, current: true };
+}
+
+inherit(P, Property, {
+  _name: 'constant',
+  _active: false,
+  _activating: false,
+  _alive: false,
+  _dispatcher: null,
+  _logHandlers: null
+});
+
+function constant(x) {
+  return new P(x);
+}
+
+// HACK:
+//   We don't call parent Class constructor, but instead putting all necessary
+//   properties into prototype to simulate ended Property
+//   (see Propperty and Observable classes).
+
+function P$1(value) {
+  this._currentEvent = { type: 'error', value: value, current: true };
+}
+
+inherit(P$1, Property, {
+  _name: 'constantError',
+  _active: false,
+  _activating: false,
+  _alive: false,
+  _dispatcher: null,
+  _logHandlers: null
+});
+
+function constantError(x) {
+  return new P$1(x);
+}
+
+function createConstructor(BaseClass, name) {
+  return function AnonymousObservable(source, options) {
+    var _this = this;
+
+    BaseClass.call(this);
+    this._source = source;
+    this._name = source._name + '.' + name;
+    this._init(options);
+    this._$handleAny = function (event) {
+      return _this._handleAny(event);
+    };
+  };
+}
+
+function createClassMethods(BaseClass) {
+  return {
+    _init: function () {},
+    _free: function () {},
+    _handleValue: function (x) {
+      this._emitValue(x);
+    },
+    _handleError: function (x) {
+      this._emitError(x);
+    },
+    _handleEnd: function () {
+      this._emitEnd();
+    },
+    _handleAny: function (event) {
+      switch (event.type) {
+        case VALUE:
+          return this._handleValue(event.value);
+        case ERROR:
+          return this._handleError(event.value);
+        case END:
+          return this._handleEnd();
+      }
+    },
+    _onActivation: function () {
+      this._source.onAny(this._$handleAny);
+    },
+    _onDeactivation: function () {
+      this._source.offAny(this._$handleAny);
+    },
+    _clear: function () {
+      BaseClass.prototype._clear.call(this);
+      this._source = null;
+      this._$handleAny = null;
+      this._free();
+    }
+  };
+}
+
+function createStream(name, mixin) {
+  var S = createConstructor(Stream, name);
+  inherit(S, Stream, createClassMethods(Stream), mixin);
+  return S;
+}
+
+function createProperty(name, mixin) {
+  var P = createConstructor(Property, name);
+  inherit(P, Property, createClassMethods(Property), mixin);
+  return P;
+}
+
+var P$2 = createProperty('toProperty', {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._getInitialCurrent = fn;
+  },
+  _onActivation: function () {
+    if (this._getInitialCurrent !== null) {
+      var getInitial = this._getInitialCurrent;
+      this._emitValue(getInitial());
+    }
+    this._source.onAny(this._$handleAny); // copied from patterns/one-source
+  }
+});
+
+function toProperty(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  if (fn !== null && typeof fn !== 'function') {
+    throw new Error('You should call toProperty() with a function or no arguments.');
+  }
+  return new P$2(obs, { fn: fn });
+}
+
+var S$6 = createStream('changes', {
+  _handleValue: function (x) {
+    if (!this._activating) {
+      this._emitValue(x);
+    }
+  },
+  _handleError: function (x) {
+    if (!this._activating) {
+      this._emitError(x);
+    }
+  }
+});
+
+function changes(obs) {
+  return new S$6(obs);
+}
+
+function fromPromise(promise) {
+  var called = false;
+
+  var result = stream(function (emitter) {
+    if (!called) {
+      var onValue = function (x) {
+        emitter.emit(x);
+        emitter.end();
+      };
+      var onError = function (x) {
+        emitter.error(x);
+        emitter.end();
+      };
+      var _promise = promise.then(onValue, onError);
+
+      // prevent libraries like 'Q' or 'when' from swallowing exceptions
+      if (_promise && typeof _promise.done === 'function') {
+        _promise.done();
+      }
+
+      called = true;
+    }
+  });
+
+  return toProperty(result, null).setName('fromPromise');
+}
+
+function getGlodalPromise() {
+  if (typeof Promise === 'function') {
+    return Promise;
+  } else {
+    throw new Error("There isn't default Promise, use shim or parameter");
+  }
+}
+
+var toPromise = function (obs) {
+  var Promise = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : getGlodalPromise();
+
+  var last = null;
+  return new Promise(function (resolve, reject) {
+    obs.onAny(function (event) {
+      if (event.type === END && last !== null) {
+        (last.type === VALUE ? resolve : reject)(last.value);
+        last = null;
+      } else {
+        last = event;
+      }
+    });
+  });
+};
+
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+
+
+
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var ponyfill = createCommonjsModule(function (module, exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports['default'] = symbolObservablePonyfill;
+function symbolObservablePonyfill(root) {
+	var result;
+	var _Symbol = root.Symbol;
+
+	if (typeof _Symbol === 'function') {
+		if (_Symbol.observable) {
+			result = _Symbol.observable;
+		} else {
+			result = _Symbol('observable');
+			_Symbol.observable = result;
+		}
+	} else {
+		result = '@@observable';
+	}
+
+	return result;
+}
+});
+
+var index$1 = createCommonjsModule(function (module, exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+
+var _ponyfill2 = _interopRequireDefault(ponyfill);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { 'default': obj };
+}
+
+var root; /* global window */
+
+if (typeof self !== 'undefined') {
+  root = self;
+} else if (typeof window !== 'undefined') {
+  root = window;
+} else if (typeof commonjsGlobal !== 'undefined') {
+  root = commonjsGlobal;
+} else {
+  root = module;
+}
+
+var result = (0, _ponyfill2['default'])(root);
+exports['default'] = result;
+});
+
+var index = index$1;
+
+// this file contains some hot JS modules systems stuff
+
+var $$observable = index.default ? index.default : index;
+
+function fromESObservable(_observable) {
+  var observable = _observable[$$observable] ? _observable[$$observable]() : _observable;
+  return stream(function (emitter) {
+    var unsub = observable.subscribe({
+      error: function (error) {
+        emitter.error(error);
+        emitter.end();
+      },
+      next: function (value) {
+        emitter.emit(value);
+      },
+      complete: function () {
+        emitter.end();
+      }
+    });
+
+    if (unsub.unsubscribe) {
+      return function () {
+        unsub.unsubscribe();
+      };
+    } else {
+      return unsub;
+    }
+  }).setName('fromESObservable');
+}
+
+function ESObservable(observable) {
+  this._observable = observable.takeErrors(1);
+}
+
+extend(ESObservable.prototype, {
+  subscribe: function (observerOrOnNext, onError, onComplete) {
+    var _this = this;
+
+    var observer = typeof observerOrOnNext === 'function' ? { next: observerOrOnNext, error: onError, complete: onComplete } : observerOrOnNext;
+
+    var fn = function (event) {
+      if (event.type === END) {
+        closed = true;
+      }
+
+      if (event.type === VALUE && observer.next) {
+        observer.next(event.value);
+      } else if (event.type === ERROR && observer.error) {
+        observer.error(event.value);
+      } else if (event.type === END && observer.complete) {
+        observer.complete(event.value);
+      }
+    };
+
+    this._observable.onAny(fn);
+    var closed = false;
+
+    var subscription = {
+      unsubscribe: function () {
+        closed = true;
+        _this._observable.offAny(fn);
+      },
+      get closed() {
+        return closed;
+      }
+    };
+    return subscription;
+  }
+});
+
+// Need to assign directly b/c Symbols aren't enumerable.
+ESObservable.prototype[$$observable] = function () {
+  return this;
+};
+
+function toESObservable() {
+  return new ESObservable(this);
+}
+
+function collect(source, keys, values) {
+  for (var prop in source) {
+    if (source.hasOwnProperty(prop)) {
+      keys.push(prop);
+      values.push(source[prop]);
+    }
+  }
+}
+
+function defaultErrorsCombinator(errors) {
+  var latestError = void 0;
+  for (var i = 0; i < errors.length; i++) {
+    if (errors[i] !== undefined) {
+      if (latestError === undefined || latestError.index < errors[i].index) {
+        latestError = errors[i];
+      }
+    }
+  }
+  return latestError.error;
+}
+
+function Combine(active, passive, combinator) {
+  var _this = this;
+
+  Stream.call(this);
+  this._activeCount = active.length;
+  this._sources = concat(active, passive);
+  this._combinator = combinator;
+  this._aliveCount = 0;
+  this._latestValues = new Array(this._sources.length);
+  this._latestErrors = new Array(this._sources.length);
+  fillArray(this._latestValues, NOTHING);
+  this._emitAfterActivation = false;
+  this._endAfterActivation = false;
+  this._latestErrorIndex = 0;
+
+  this._$handlers = [];
+
+  var _loop = function (i) {
+    _this._$handlers.push(function (event) {
+      return _this._handleAny(i, event);
+    });
+  };
+
+  for (var i = 0; i < this._sources.length; i++) {
+    _loop(i);
+  }
+}
+
+inherit(Combine, Stream, {
+  _name: 'combine',
+
+  _onActivation: function () {
+    this._aliveCount = this._activeCount;
+
+    // we need to suscribe to _passive_ sources before _active_
+    // (see https://github.com/rpominov/kefir/issues/98)
+    for (var i = this._activeCount; i < this._sources.length; i++) {
+      this._sources[i].onAny(this._$handlers[i]);
+    }
+    for (var _i = 0; _i < this._activeCount; _i++) {
+      this._sources[_i].onAny(this._$handlers[_i]);
+    }
+
+    if (this._emitAfterActivation) {
+      this._emitAfterActivation = false;
+      this._emitIfFull();
+    }
+    if (this._endAfterActivation) {
+      this._emitEnd();
+    }
+  },
+  _onDeactivation: function () {
+    var length = this._sources.length,
+        i = void 0;
+    for (i = 0; i < length; i++) {
+      this._sources[i].offAny(this._$handlers[i]);
+    }
+  },
+  _emitIfFull: function () {
+    var hasAllValues = true;
+    var hasErrors = false;
+    var length = this._latestValues.length;
+    var valuesCopy = new Array(length);
+    var errorsCopy = new Array(length);
+
+    for (var i = 0; i < length; i++) {
+      valuesCopy[i] = this._latestValues[i];
+      errorsCopy[i] = this._latestErrors[i];
+
+      if (valuesCopy[i] === NOTHING) {
+        hasAllValues = false;
+      }
+
+      if (errorsCopy[i] !== undefined) {
+        hasErrors = true;
+      }
+    }
+
+    if (hasAllValues) {
+      var combinator = this._combinator;
+      this._emitValue(combinator(valuesCopy));
+    }
+    if (hasErrors) {
+      this._emitError(defaultErrorsCombinator(errorsCopy));
+    }
+  },
+  _handleAny: function (i, event) {
+    if (event.type === VALUE || event.type === ERROR) {
+      if (event.type === VALUE) {
+        this._latestValues[i] = event.value;
+        this._latestErrors[i] = undefined;
+      }
+      if (event.type === ERROR) {
+        this._latestValues[i] = NOTHING;
+        this._latestErrors[i] = {
+          index: this._latestErrorIndex++,
+          error: event.value
+        };
+      }
+
+      if (i < this._activeCount) {
+        if (this._activating) {
+          this._emitAfterActivation = true;
+        } else {
+          this._emitIfFull();
+        }
+      }
+    } else {
+      // END
+
+      if (i < this._activeCount) {
+        this._aliveCount--;
+        if (this._aliveCount === 0) {
+          if (this._activating) {
+            this._endAfterActivation = true;
+          } else {
+            this._emitEnd();
+          }
+        }
+      }
+    }
+  },
+  _clear: function () {
+    Stream.prototype._clear.call(this);
+    this._sources = null;
+    this._latestValues = null;
+    this._latestErrors = null;
+    this._combinator = null;
+    this._$handlers = null;
+  }
+});
+
+function combineAsArray(active) {
+  var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var combinator = arguments[2];
+
+  if (!Array.isArray(passive)) {
+    throw new Error('Combine can only combine active and passive collections of the same type.');
+  }
+
+  combinator = combinator ? spread(combinator, active.length + passive.length) : function (x) {
+    return x;
+  };
+  return active.length === 0 ? never() : new Combine(active, passive, combinator);
+}
+
+function combineAsObject(active) {
+  var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var combinator = arguments[2];
+
+  if (typeof passive !== 'object' || Array.isArray(passive)) {
+    throw new Error('Combine can only combine active and passive collections of the same type.');
+  }
+
+  var keys = [],
+      activeObservables = [],
+      passiveObservables = [];
+
+  collect(active, keys, activeObservables);
+  collect(passive, keys, passiveObservables);
+
+  var objectify = function (values) {
+    var event = {};
+    for (var i = values.length - 1; 0 <= i; i--) {
+      event[keys[i]] = values[i];
+    }
+    return combinator ? combinator(event) : event;
+  };
+
+  return activeObservables.length === 0 ? never() : new Combine(activeObservables, passiveObservables, objectify);
+}
+
+function combine(active, passive, combinator) {
+  if (typeof passive === 'function') {
+    combinator = passive;
+    passive = undefined;
+  }
+
+  return Array.isArray(active) ? combineAsArray(active, passive, combinator) : combineAsObject(active, passive, combinator);
+}
+
+var Observable$2 = {
+  empty: function () {
+    return never();
+  },
+
+
+  // Monoid based on merge() seems more useful than one based on concat().
+  concat: function (a, b) {
+    return a.merge(b);
+  },
+  of: function (x) {
+    return constant(x);
+  },
+  map: function (fn, obs) {
+    return obs.map(fn);
+  },
+  bimap: function (fnErr, fnVal, obs) {
+    return obs.mapErrors(fnErr).map(fnVal);
+  },
+
+
+  // This ap strictly speaking incompatible with chain. If we derive ap from chain we get
+  // different (not very useful) behavior. But spec requires that if method can be derived
+  // it must have the same behavior as hand-written method. We intentionally violate the spec
+  // in hope that it won't cause many troubles in practice. And in return we have more useful type.
+  ap: function (obsFn, obsVal) {
+    return combine([obsFn, obsVal], function (fn, val) {
+      return fn(val);
+    });
+  },
+  chain: function (fn, obs) {
+    return obs.flatMap(fn);
+  }
+};
+
+
+
+var staticLand = Object.freeze({
+	Observable: Observable$2
+});
+
+var mixin = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    this._emitValue(fn(x));
+  }
+};
+
+var S$7 = createStream('map', mixin);
+var P$3 = createProperty('map', mixin);
+
+var id = function (x) {
+  return x;
+};
+
+function map$1(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id;
+
+  return new (obs._ofSameType(S$7, P$3))(obs, { fn: fn });
+}
+
+var mixin$1 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    if (fn(x)) {
+      this._emitValue(x);
+    }
+  }
+};
+
+var S$8 = createStream('filter', mixin$1);
+var P$4 = createProperty('filter', mixin$1);
+
+var id$1 = function (x) {
+  return x;
+};
+
+function filter(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$1;
+
+  return new (obs._ofSameType(S$8, P$4))(obs, { fn: fn });
+}
+
+var mixin$2 = {
+  _init: function (_ref) {
+    var n = _ref.n;
+
+    this._n = n;
+    if (n <= 0) {
+      this._emitEnd();
+    }
+  },
+  _handleValue: function (x) {
+    this._n--;
+    this._emitValue(x);
+    if (this._n === 0) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$9 = createStream('take', mixin$2);
+var P$5 = createProperty('take', mixin$2);
+
+function take(obs, n) {
+  return new (obs._ofSameType(S$9, P$5))(obs, { n: n });
+}
+
+var mixin$3 = {
+  _init: function (_ref) {
+    var n = _ref.n;
+
+    this._n = n;
+    if (n <= 0) {
+      this._emitEnd();
+    }
+  },
+  _handleError: function (x) {
+    this._n--;
+    this._emitError(x);
+    if (this._n === 0) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$10 = createStream('takeErrors', mixin$3);
+var P$6 = createProperty('takeErrors', mixin$3);
+
+function takeErrors(obs, n) {
+  return new (obs._ofSameType(S$10, P$6))(obs, { n: n });
+}
+
+var mixin$4 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    if (fn(x)) {
+      this._emitValue(x);
+    } else {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$11 = createStream('takeWhile', mixin$4);
+var P$7 = createProperty('takeWhile', mixin$4);
+
+var id$2 = function (x) {
+  return x;
+};
+
+function takeWhile(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$2;
+
+  return new (obs._ofSameType(S$11, P$7))(obs, { fn: fn });
+}
+
+var mixin$5 = {
+  _init: function () {
+    this._lastValue = NOTHING;
+  },
+  _free: function () {
+    this._lastValue = null;
+  },
+  _handleValue: function (x) {
+    this._lastValue = x;
+  },
+  _handleEnd: function () {
+    if (this._lastValue !== NOTHING) {
+      this._emitValue(this._lastValue);
+    }
+    this._emitEnd();
+  }
+};
+
+var S$12 = createStream('last', mixin$5);
+var P$8 = createProperty('last', mixin$5);
+
+function last(obs) {
+  return new (obs._ofSameType(S$12, P$8))(obs);
+}
+
+var mixin$6 = {
+  _init: function (_ref) {
+    var n = _ref.n;
+
+    this._n = Math.max(0, n);
+  },
+  _handleValue: function (x) {
+    if (this._n === 0) {
+      this._emitValue(x);
+    } else {
+      this._n--;
+    }
+  }
+};
+
+var S$13 = createStream('skip', mixin$6);
+var P$9 = createProperty('skip', mixin$6);
+
+function skip(obs, n) {
+  return new (obs._ofSameType(S$13, P$9))(obs, { n: n });
+}
+
+var mixin$7 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    if (this._fn !== null && !fn(x)) {
+      this._fn = null;
+    }
+    if (this._fn === null) {
+      this._emitValue(x);
+    }
+  }
+};
+
+var S$14 = createStream('skipWhile', mixin$7);
+var P$10 = createProperty('skipWhile', mixin$7);
+
+var id$3 = function (x) {
+  return x;
+};
+
+function skipWhile(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$3;
+
+  return new (obs._ofSameType(S$14, P$10))(obs, { fn: fn });
+}
+
+var mixin$8 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+    this._prev = NOTHING;
+  },
+  _free: function () {
+    this._fn = null;
+    this._prev = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    if (this._prev === NOTHING || !fn(this._prev, x)) {
+      this._prev = x;
+      this._emitValue(x);
+    }
+  }
+};
+
+var S$15 = createStream('skipDuplicates', mixin$8);
+var P$11 = createProperty('skipDuplicates', mixin$8);
+
+var eq = function (a, b) {
+  return a === b;
+};
+
+function skipDuplicates(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : eq;
+
+  return new (obs._ofSameType(S$15, P$11))(obs, { fn: fn });
+}
+
+var mixin$9 = {
+  _init: function (_ref) {
+    var fn = _ref.fn,
+        seed = _ref.seed;
+
+    this._fn = fn;
+    this._prev = seed;
+  },
+  _free: function () {
+    this._prev = null;
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    if (this._prev !== NOTHING) {
+      var fn = this._fn;
+      this._emitValue(fn(this._prev, x));
+    }
+    this._prev = x;
+  }
+};
+
+var S$16 = createStream('diff', mixin$9);
+var P$12 = createProperty('diff', mixin$9);
+
+function defaultFn(a, b) {
+  return [a, b];
+}
+
+function diff(obs, fn) {
+  var seed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : NOTHING;
+
+  return new (obs._ofSameType(S$16, P$12))(obs, { fn: fn || defaultFn, seed: seed });
+}
+
+var P$13 = createProperty('scan', {
+  _init: function (_ref) {
+    var fn = _ref.fn,
+        seed = _ref.seed;
+
+    this._fn = fn;
+    this._seed = seed;
+    if (seed !== NOTHING) {
+      this._emitValue(seed);
+    }
+  },
+  _free: function () {
+    this._fn = null;
+    this._seed = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    if (this._currentEvent === null || this._currentEvent.type === ERROR) {
+      this._emitValue(this._seed === NOTHING ? x : fn(this._seed, x));
+    } else {
+      this._emitValue(fn(this._currentEvent.value, x));
+    }
+  }
+});
+
+function scan(obs, fn) {
+  var seed = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : NOTHING;
+
+  return new P$13(obs, { fn: fn, seed: seed });
+}
+
+var mixin$10 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    var xs = fn(x);
+    for (var i = 0; i < xs.length; i++) {
+      this._emitValue(xs[i]);
+    }
+  }
+};
+
+var S$17 = createStream('flatten', mixin$10);
+
+var id$4 = function (x) {
+  return x;
+};
+
+function flatten(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$4;
+
+  return new S$17(obs, { fn: fn });
+}
+
+var END_MARKER = {};
+
+var mixin$11 = {
+  _init: function (_ref) {
+    var _this = this;
+
+    var wait = _ref.wait;
+
+    this._wait = Math.max(0, wait);
+    this._buff = [];
+    this._$shiftBuff = function () {
+      var value = _this._buff.shift();
+      if (value === END_MARKER) {
+        _this._emitEnd();
+      } else {
+        _this._emitValue(value);
+      }
+    };
+  },
+  _free: function () {
+    this._buff = null;
+    this._$shiftBuff = null;
+  },
+  _handleValue: function (x) {
+    if (this._activating) {
+      this._emitValue(x);
+    } else {
+      this._buff.push(x);
+      setTimeout(this._$shiftBuff, this._wait);
+    }
+  },
+  _handleEnd: function () {
+    if (this._activating) {
+      this._emitEnd();
+    } else {
+      this._buff.push(END_MARKER);
+      setTimeout(this._$shiftBuff, this._wait);
+    }
+  }
+};
+
+var S$18 = createStream('delay', mixin$11);
+var P$14 = createProperty('delay', mixin$11);
+
+function delay(obs, wait) {
+  return new (obs._ofSameType(S$18, P$14))(obs, { wait: wait });
+}
+
+var now = Date.now ? function () {
+  return Date.now();
+} : function () {
+  return new Date().getTime();
+};
+
+var mixin$12 = {
+  _init: function (_ref) {
+    var _this = this;
+
+    var wait = _ref.wait,
+        leading = _ref.leading,
+        trailing = _ref.trailing;
+
+    this._wait = Math.max(0, wait);
+    this._leading = leading;
+    this._trailing = trailing;
+    this._trailingValue = null;
+    this._timeoutId = null;
+    this._endLater = false;
+    this._lastCallTime = 0;
+    this._$trailingCall = function () {
+      return _this._trailingCall();
+    };
+  },
+  _free: function () {
+    this._trailingValue = null;
+    this._$trailingCall = null;
+  },
+  _handleValue: function (x) {
+    if (this._activating) {
+      this._emitValue(x);
+    } else {
+      var curTime = now();
+      if (this._lastCallTime === 0 && !this._leading) {
+        this._lastCallTime = curTime;
+      }
+      var remaining = this._wait - (curTime - this._lastCallTime);
+      if (remaining <= 0) {
+        this._cancelTrailing();
+        this._lastCallTime = curTime;
+        this._emitValue(x);
+      } else if (this._trailing) {
+        this._cancelTrailing();
+        this._trailingValue = x;
+        this._timeoutId = setTimeout(this._$trailingCall, remaining);
+      }
+    }
+  },
+  _handleEnd: function () {
+    if (this._activating) {
+      this._emitEnd();
+    } else {
+      if (this._timeoutId) {
+        this._endLater = true;
+      } else {
+        this._emitEnd();
+      }
+    }
+  },
+  _cancelTrailing: function () {
+    if (this._timeoutId !== null) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = null;
+    }
+  },
+  _trailingCall: function () {
+    this._emitValue(this._trailingValue);
+    this._timeoutId = null;
+    this._trailingValue = null;
+    this._lastCallTime = !this._leading ? 0 : now();
+    if (this._endLater) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$19 = createStream('throttle', mixin$12);
+var P$15 = createProperty('throttle', mixin$12);
+
+function throttle(obs, wait) {
+  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      _ref2$leading = _ref2.leading,
+      leading = _ref2$leading === undefined ? true : _ref2$leading,
+      _ref2$trailing = _ref2.trailing,
+      trailing = _ref2$trailing === undefined ? true : _ref2$trailing;
+
+  return new (obs._ofSameType(S$19, P$15))(obs, { wait: wait, leading: leading, trailing: trailing });
+}
+
+var mixin$13 = {
+  _init: function (_ref) {
+    var _this = this;
+
+    var wait = _ref.wait,
+        immediate = _ref.immediate;
+
+    this._wait = Math.max(0, wait);
+    this._immediate = immediate;
+    this._lastAttempt = 0;
+    this._timeoutId = null;
+    this._laterValue = null;
+    this._endLater = false;
+    this._$later = function () {
+      return _this._later();
+    };
+  },
+  _free: function () {
+    this._laterValue = null;
+    this._$later = null;
+  },
+  _handleValue: function (x) {
+    if (this._activating) {
+      this._emitValue(x);
+    } else {
+      this._lastAttempt = now();
+      if (this._immediate && !this._timeoutId) {
+        this._emitValue(x);
+      }
+      if (!this._timeoutId) {
+        this._timeoutId = setTimeout(this._$later, this._wait);
+      }
+      if (!this._immediate) {
+        this._laterValue = x;
+      }
+    }
+  },
+  _handleEnd: function () {
+    if (this._activating) {
+      this._emitEnd();
+    } else {
+      if (this._timeoutId && !this._immediate) {
+        this._endLater = true;
+      } else {
+        this._emitEnd();
+      }
+    }
+  },
+  _later: function () {
+    var last = now() - this._lastAttempt;
+    if (last < this._wait && last >= 0) {
+      this._timeoutId = setTimeout(this._$later, this._wait - last);
+    } else {
+      this._timeoutId = null;
+      if (!this._immediate) {
+        this._emitValue(this._laterValue);
+        this._laterValue = null;
+      }
+      if (this._endLater) {
+        this._emitEnd();
+      }
+    }
+  }
+};
+
+var S$20 = createStream('debounce', mixin$13);
+var P$16 = createProperty('debounce', mixin$13);
+
+function debounce(obs, wait) {
+  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      _ref2$immediate = _ref2.immediate,
+      immediate = _ref2$immediate === undefined ? false : _ref2$immediate;
+
+  return new (obs._ofSameType(S$20, P$16))(obs, { wait: wait, immediate: immediate });
+}
+
+var mixin$14 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleError: function (x) {
+    var fn = this._fn;
+    this._emitError(fn(x));
+  }
+};
+
+var S$21 = createStream('mapErrors', mixin$14);
+var P$17 = createProperty('mapErrors', mixin$14);
+
+var id$5 = function (x) {
+  return x;
+};
+
+function mapErrors(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$5;
+
+  return new (obs._ofSameType(S$21, P$17))(obs, { fn: fn });
+}
+
+var mixin$15 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleError: function (x) {
+    var fn = this._fn;
+    if (fn(x)) {
+      this._emitError(x);
+    }
+  }
+};
+
+var S$22 = createStream('filterErrors', mixin$15);
+var P$18 = createProperty('filterErrors', mixin$15);
+
+var id$6 = function (x) {
+  return x;
+};
+
+function filterErrors(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id$6;
+
+  return new (obs._ofSameType(S$22, P$18))(obs, { fn: fn });
+}
+
+var mixin$16 = {
+  _handleValue: function () {}
+};
+
+var S$23 = createStream('ignoreValues', mixin$16);
+var P$19 = createProperty('ignoreValues', mixin$16);
+
+function ignoreValues(obs) {
+  return new (obs._ofSameType(S$23, P$19))(obs);
+}
+
+var mixin$17 = {
+  _handleError: function () {}
+};
+
+var S$24 = createStream('ignoreErrors', mixin$17);
+var P$20 = createProperty('ignoreErrors', mixin$17);
+
+function ignoreErrors(obs) {
+  return new (obs._ofSameType(S$24, P$20))(obs);
+}
+
+var mixin$18 = {
+  _handleEnd: function () {}
+};
+
+var S$25 = createStream('ignoreEnd', mixin$18);
+var P$21 = createProperty('ignoreEnd', mixin$18);
+
+function ignoreEnd(obs) {
+  return new (obs._ofSameType(S$25, P$21))(obs);
+}
+
+var mixin$19 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleEnd: function () {
+    var fn = this._fn;
+    this._emitValue(fn());
+    this._emitEnd();
+  }
+};
+
+var S$26 = createStream('beforeEnd', mixin$19);
+var P$22 = createProperty('beforeEnd', mixin$19);
+
+function beforeEnd(obs, fn) {
+  return new (obs._ofSameType(S$26, P$22))(obs, { fn: fn });
+}
+
+var mixin$20 = {
+  _init: function (_ref) {
+    var min = _ref.min,
+        max = _ref.max;
+
+    this._max = max;
+    this._min = min;
+    this._buff = [];
+  },
+  _free: function () {
+    this._buff = null;
+  },
+  _handleValue: function (x) {
+    this._buff = slide(this._buff, x, this._max);
+    if (this._buff.length >= this._min) {
+      this._emitValue(this._buff);
+    }
+  }
+};
+
+var S$27 = createStream('slidingWindow', mixin$20);
+var P$23 = createProperty('slidingWindow', mixin$20);
+
+function slidingWindow(obs, max) {
+  var min = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+  return new (obs._ofSameType(S$27, P$23))(obs, { min: min, max: max });
+}
+
+var mixin$21 = {
+  _init: function (_ref) {
+    var fn = _ref.fn,
+        flushOnEnd = _ref.flushOnEnd;
+
+    this._fn = fn;
+    this._flushOnEnd = flushOnEnd;
+    this._buff = [];
+  },
+  _free: function () {
+    this._buff = null;
+  },
+  _flush: function () {
+    if (this._buff !== null && this._buff.length !== 0) {
+      this._emitValue(this._buff);
+      this._buff = [];
+    }
+  },
+  _handleValue: function (x) {
+    this._buff.push(x);
+    var fn = this._fn;
+    if (!fn(x)) {
+      this._flush();
+    }
+  },
+  _handleEnd: function () {
+    if (this._flushOnEnd) {
+      this._flush();
+    }
+    this._emitEnd();
+  }
+};
+
+var S$28 = createStream('bufferWhile', mixin$21);
+var P$24 = createProperty('bufferWhile', mixin$21);
+
+var id$7 = function (x) {
+  return x;
+};
+
+function bufferWhile(obs, fn) {
+  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      _ref2$flushOnEnd = _ref2.flushOnEnd,
+      flushOnEnd = _ref2$flushOnEnd === undefined ? true : _ref2$flushOnEnd;
+
+  return new (obs._ofSameType(S$28, P$24))(obs, { fn: fn || id$7, flushOnEnd: flushOnEnd });
+}
+
+var mixin$22 = {
+  _init: function (_ref) {
+    var count = _ref.count,
+        flushOnEnd = _ref.flushOnEnd;
+
+    this._count = count;
+    this._flushOnEnd = flushOnEnd;
+    this._buff = [];
+  },
+  _free: function () {
+    this._buff = null;
+  },
+  _flush: function () {
+    if (this._buff !== null && this._buff.length !== 0) {
+      this._emitValue(this._buff);
+      this._buff = [];
+    }
+  },
+  _handleValue: function (x) {
+    this._buff.push(x);
+    if (this._buff.length >= this._count) {
+      this._flush();
+    }
+  },
+  _handleEnd: function () {
+    if (this._flushOnEnd) {
+      this._flush();
+    }
+    this._emitEnd();
+  }
+};
+
+var S$29 = createStream('bufferWithCount', mixin$22);
+var P$25 = createProperty('bufferWithCount', mixin$22);
+
+function bufferWhile$1(obs, count) {
+  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      _ref2$flushOnEnd = _ref2.flushOnEnd,
+      flushOnEnd = _ref2$flushOnEnd === undefined ? true : _ref2$flushOnEnd;
+
+  return new (obs._ofSameType(S$29, P$25))(obs, { count: count, flushOnEnd: flushOnEnd });
+}
+
+var mixin$23 = {
+  _init: function (_ref) {
+    var _this = this;
+
+    var wait = _ref.wait,
+        count = _ref.count,
+        flushOnEnd = _ref.flushOnEnd;
+
+    this._wait = wait;
+    this._count = count;
+    this._flushOnEnd = flushOnEnd;
+    this._intervalId = null;
+    this._$onTick = function () {
+      return _this._flush();
+    };
+    this._buff = [];
+  },
+  _free: function () {
+    this._$onTick = null;
+    this._buff = null;
+  },
+  _flush: function () {
+    if (this._buff !== null) {
+      this._emitValue(this._buff);
+      this._buff = [];
+    }
+  },
+  _handleValue: function (x) {
+    this._buff.push(x);
+    if (this._buff.length >= this._count) {
+      clearInterval(this._intervalId);
+      this._flush();
+      this._intervalId = setInterval(this._$onTick, this._wait);
+    }
+  },
+  _handleEnd: function () {
+    if (this._flushOnEnd && this._buff.length !== 0) {
+      this._flush();
+    }
+    this._emitEnd();
+  },
+  _onActivation: function () {
+    this._intervalId = setInterval(this._$onTick, this._wait);
+    this._source.onAny(this._$handleAny); // copied from patterns/one-source
+  },
+  _onDeactivation: function () {
+    if (this._intervalId !== null) {
+      clearInterval(this._intervalId);
+      this._intervalId = null;
+    }
+    this._source.offAny(this._$handleAny); // copied from patterns/one-source
+  }
+};
+
+var S$30 = createStream('bufferWithTimeOrCount', mixin$23);
+var P$26 = createProperty('bufferWithTimeOrCount', mixin$23);
+
+function bufferWithTimeOrCount(obs, wait, count) {
+  var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+      _ref2$flushOnEnd = _ref2.flushOnEnd,
+      flushOnEnd = _ref2$flushOnEnd === undefined ? true : _ref2$flushOnEnd;
+
+  return new (obs._ofSameType(S$30, P$26))(obs, { wait: wait, count: count, flushOnEnd: flushOnEnd });
+}
+
+function xformForObs(obs) {
+  return {
+    '@@transducer/step': function (res, input) {
+      obs._emitValue(input);
+      return null;
+    },
+    '@@transducer/result': function () {
+      obs._emitEnd();
+      return null;
+    }
+  };
+}
+
+var mixin$24 = {
+  _init: function (_ref) {
+    var transducer = _ref.transducer;
+
+    this._xform = transducer(xformForObs(this));
+  },
+  _free: function () {
+    this._xform = null;
+  },
+  _handleValue: function (x) {
+    if (this._xform['@@transducer/step'](null, x) !== null) {
+      this._xform['@@transducer/result'](null);
+    }
+  },
+  _handleEnd: function () {
+    this._xform['@@transducer/result'](null);
+  }
+};
+
+var S$31 = createStream('transduce', mixin$24);
+var P$27 = createProperty('transduce', mixin$24);
+
+function transduce(obs, transducer) {
+  return new (obs._ofSameType(S$31, P$27))(obs, { transducer: transducer });
+}
+
+var mixin$25 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._handler = fn;
+    this._emitter = emitter(this);
+  },
+  _free: function () {
+    this._handler = null;
+    this._emitter = null;
+  },
+  _handleAny: function (event) {
+    this._handler(this._emitter, event);
+  }
+};
+
+var S$32 = createStream('withHandler', mixin$25);
+var P$28 = createProperty('withHandler', mixin$25);
+
+function withHandler(obs, fn) {
+  return new (obs._ofSameType(S$32, P$28))(obs, { fn: fn });
+}
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+function Zip(sources, combinator) {
+  var _this = this;
+
+  Stream.call(this);
+
+  this._buffers = map(sources, function (source) {
+    return isArray(source) ? cloneArray(source) : [];
+  });
+  this._sources = map(sources, function (source) {
+    return isArray(source) ? never() : source;
+  });
+
+  this._combinator = combinator ? spread(combinator, this._sources.length) : function (x) {
+    return x;
+  };
+  this._aliveCount = 0;
+
+  this._$handlers = [];
+
+  var _loop = function (i) {
+    _this._$handlers.push(function (event) {
+      return _this._handleAny(i, event);
+    });
+  };
+
+  for (var i = 0; i < this._sources.length; i++) {
+    _loop(i);
+  }
+}
+
+inherit(Zip, Stream, {
+  _name: 'zip',
+
+  _onActivation: function () {
+    // if all sources are arrays
+    while (this._isFull()) {
+      this._emit();
+    }
+
+    var length = this._sources.length;
+    this._aliveCount = length;
+    for (var i = 0; i < length && this._active; i++) {
+      this._sources[i].onAny(this._$handlers[i]);
+    }
+  },
+  _onDeactivation: function () {
+    for (var i = 0; i < this._sources.length; i++) {
+      this._sources[i].offAny(this._$handlers[i]);
+    }
+  },
+  _emit: function () {
+    var values = new Array(this._buffers.length);
+    for (var i = 0; i < this._buffers.length; i++) {
+      values[i] = this._buffers[i].shift();
+    }
+    var combinator = this._combinator;
+    this._emitValue(combinator(values));
+  },
+  _isFull: function () {
+    for (var i = 0; i < this._buffers.length; i++) {
+      if (this._buffers[i].length === 0) {
+        return false;
+      }
+    }
+    return true;
+  },
+  _handleAny: function (i, event) {
+    if (event.type === VALUE) {
+      this._buffers[i].push(event.value);
+      if (this._isFull()) {
+        this._emit();
+      }
+    }
+    if (event.type === ERROR) {
+      this._emitError(event.value);
+    }
+    if (event.type === END) {
+      this._aliveCount--;
+      if (this._aliveCount === 0) {
+        this._emitEnd();
+      }
+    }
+  },
+  _clear: function () {
+    Stream.prototype._clear.call(this);
+    this._sources = null;
+    this._buffers = null;
+    this._combinator = null;
+    this._$handlers = null;
+  }
+});
+
+function zip(observables, combinator /* Function | falsey */) {
+  return observables.length === 0 ? never() : new Zip(observables, combinator);
+}
+
+var id$8 = function (x) {
+  return x;
+};
+
+function AbstractPool() {
+  var _this = this;
+
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$queueLim = _ref.queueLim,
+      queueLim = _ref$queueLim === undefined ? 0 : _ref$queueLim,
+      _ref$concurLim = _ref.concurLim,
+      concurLim = _ref$concurLim === undefined ? -1 : _ref$concurLim,
+      _ref$drop = _ref.drop,
+      drop = _ref$drop === undefined ? 'new' : _ref$drop;
+
+  Stream.call(this);
+
+  this._queueLim = queueLim < 0 ? -1 : queueLim;
+  this._concurLim = concurLim < 0 ? -1 : concurLim;
+  this._drop = drop;
+  this._queue = [];
+  this._curSources = [];
+  this._$handleSubAny = function (event) {
+    return _this._handleSubAny(event);
+  };
+  this._$endHandlers = [];
+  this._currentlyAdding = null;
+
+  if (this._concurLim === 0) {
+    this._emitEnd();
+  }
+}
+
+inherit(AbstractPool, Stream, {
+  _name: 'abstractPool',
+
+  _add: function (obj, toObs /* Function | falsey */) {
+    toObs = toObs || id$8;
+    if (this._concurLim === -1 || this._curSources.length < this._concurLim) {
+      this._addToCur(toObs(obj));
+    } else {
+      if (this._queueLim === -1 || this._queue.length < this._queueLim) {
+        this._addToQueue(toObs(obj));
+      } else if (this._drop === 'old') {
+        this._removeOldest();
+        this._add(obj, toObs);
+      }
+    }
+  },
+  _addAll: function (obss) {
+    var _this2 = this;
+
+    forEach(obss, function (obs) {
+      return _this2._add(obs);
+    });
+  },
+  _remove: function (obs) {
+    if (this._removeCur(obs) === -1) {
+      this._removeQueue(obs);
+    }
+  },
+  _addToQueue: function (obs) {
+    this._queue = concat(this._queue, [obs]);
+  },
+  _addToCur: function (obs) {
+    if (this._active) {
+      // HACK:
+      //
+      // We have two optimizations for cases when `obs` is ended. We don't want
+      // to add such observable to the list, but only want to emit events
+      // from it (if it has some).
+      //
+      // Instead of this hacks, we could just did following,
+      // but it would be 5-8 times slower:
+      //
+      //     this._curSources = concat(this._curSources, [obs]);
+      //     this._subscribe(obs);
+      //
+
+      // #1
+      // This one for cases when `obs` already ended
+      // e.g., Kefir.constant() or Kefir.never()
+      if (!obs._alive) {
+        if (obs._currentEvent) {
+          this._emit(obs._currentEvent.type, obs._currentEvent.value);
+        }
+        return;
+      }
+
+      // #2
+      // This one is for cases when `obs` going to end synchronously on
+      // first subscriber e.g., Kefir.stream(em => {em.emit(1); em.end()})
+      this._currentlyAdding = obs;
+      obs.onAny(this._$handleSubAny);
+      this._currentlyAdding = null;
+      if (obs._alive) {
+        this._curSources = concat(this._curSources, [obs]);
+        if (this._active) {
+          this._subToEnd(obs);
+        }
+      }
+    } else {
+      this._curSources = concat(this._curSources, [obs]);
+    }
+  },
+  _subToEnd: function (obs) {
+    var _this3 = this;
+
+    var onEnd = function () {
+      return _this3._removeCur(obs);
+    };
+    this._$endHandlers.push({ obs: obs, handler: onEnd });
+    obs.onEnd(onEnd);
+  },
+  _subscribe: function (obs) {
+    obs.onAny(this._$handleSubAny);
+
+    // it can become inactive in responce of subscribing to `obs.onAny` above
+    if (this._active) {
+      this._subToEnd(obs);
+    }
+  },
+  _unsubscribe: function (obs) {
+    obs.offAny(this._$handleSubAny);
+
+    var onEndI = findByPred(this._$endHandlers, function (obj) {
+      return obj.obs === obs;
+    });
+    if (onEndI !== -1) {
+      obs.offEnd(this._$endHandlers[onEndI].handler);
+      this._$endHandlers.splice(onEndI, 1);
+    }
+  },
+  _handleSubAny: function (event) {
+    if (event.type === VALUE) {
+      this._emitValue(event.value);
+    } else if (event.type === ERROR) {
+      this._emitError(event.value);
+    }
+  },
+  _removeQueue: function (obs) {
+    var index = find(this._queue, obs);
+    this._queue = remove(this._queue, index);
+    return index;
+  },
+  _removeCur: function (obs) {
+    if (this._active) {
+      this._unsubscribe(obs);
+    }
+    var index = find(this._curSources, obs);
+    this._curSources = remove(this._curSources, index);
+    if (index !== -1) {
+      if (this._queue.length !== 0) {
+        this._pullQueue();
+      } else if (this._curSources.length === 0) {
+        this._onEmpty();
+      }
+    }
+    return index;
+  },
+  _removeOldest: function () {
+    this._removeCur(this._curSources[0]);
+  },
+  _pullQueue: function () {
+    if (this._queue.length !== 0) {
+      this._queue = cloneArray(this._queue);
+      this._addToCur(this._queue.shift());
+    }
+  },
+  _onActivation: function () {
+    for (var i = 0, sources = this._curSources; i < sources.length && this._active; i++) {
+      this._subscribe(sources[i]);
+    }
+  },
+  _onDeactivation: function () {
+    for (var i = 0, sources = this._curSources; i < sources.length; i++) {
+      this._unsubscribe(sources[i]);
+    }
+    if (this._currentlyAdding !== null) {
+      this._unsubscribe(this._currentlyAdding);
+    }
+  },
+  _isEmpty: function () {
+    return this._curSources.length === 0;
+  },
+  _onEmpty: function () {},
+  _clear: function () {
+    Stream.prototype._clear.call(this);
+    this._queue = null;
+    this._curSources = null;
+    this._$handleSubAny = null;
+    this._$endHandlers = null;
+  }
+});
+
+function Merge(sources) {
+  AbstractPool.call(this);
+  this._addAll(sources);
+  this._initialised = true;
+}
+
+inherit(Merge, AbstractPool, {
+  _name: 'merge',
+
+  _onEmpty: function () {
+    if (this._initialised) {
+      this._emitEnd();
+    }
+  }
+});
+
+function merge(observables) {
+  return observables.length === 0 ? never() : new Merge(observables);
+}
+
+function S$33(generator) {
+  var _this = this;
+
+  Stream.call(this);
+  this._generator = generator;
+  this._source = null;
+  this._inLoop = false;
+  this._iteration = 0;
+  this._$handleAny = function (event) {
+    return _this._handleAny(event);
+  };
+}
+
+inherit(S$33, Stream, {
+  _name: 'repeat',
+
+  _handleAny: function (event) {
+    if (event.type === END) {
+      this._source = null;
+      this._getSource();
+    } else {
+      this._emit(event.type, event.value);
+    }
+  },
+  _getSource: function () {
+    if (!this._inLoop) {
+      this._inLoop = true;
+      var generator = this._generator;
+      while (this._source === null && this._alive && this._active) {
+        this._source = generator(this._iteration++);
+        if (this._source) {
+          this._source.onAny(this._$handleAny);
+        } else {
+          this._emitEnd();
+        }
+      }
+      this._inLoop = false;
+    }
+  },
+  _onActivation: function () {
+    if (this._source) {
+      this._source.onAny(this._$handleAny);
+    } else {
+      this._getSource();
+    }
+  },
+  _onDeactivation: function () {
+    if (this._source) {
+      this._source.offAny(this._$handleAny);
+    }
+  },
+  _clear: function () {
+    Stream.prototype._clear.call(this);
+    this._generator = null;
+    this._source = null;
+    this._$handleAny = null;
+  }
+});
+
+var repeat = function (generator) {
+  return new S$33(generator);
+};
+
+function concat$1(observables) {
+  return repeat(function (index) {
+    return observables.length > index ? observables[index] : false;
+  }).setName('concat');
+}
+
+function Pool() {
+  AbstractPool.call(this);
+}
+
+inherit(Pool, AbstractPool, {
+  _name: 'pool',
+
+  plug: function (obs) {
+    this._add(obs);
+    return this;
+  },
+  unplug: function (obs) {
+    this._remove(obs);
+    return this;
+  }
+});
+
+function FlatMap(source, fn, options) {
+  var _this = this;
+
+  AbstractPool.call(this, options);
+  this._source = source;
+  this._fn = fn;
+  this._mainEnded = false;
+  this._lastCurrent = null;
+  this._$handleMain = function (event) {
+    return _this._handleMain(event);
+  };
+}
+
+inherit(FlatMap, AbstractPool, {
+  _onActivation: function () {
+    AbstractPool.prototype._onActivation.call(this);
+    if (this._active) {
+      this._source.onAny(this._$handleMain);
+    }
+  },
+  _onDeactivation: function () {
+    AbstractPool.prototype._onDeactivation.call(this);
+    this._source.offAny(this._$handleMain);
+    this._hadNoEvSinceDeact = true;
+  },
+  _handleMain: function (event) {
+    if (event.type === VALUE) {
+      // Is latest value before deactivation survived, and now is 'current' on this activation?
+      // We don't want to handle such values, to prevent to constantly add
+      // same observale on each activation/deactivation when our main source
+      // is a `Kefir.conatant()` for example.
+      var sameCurr = this._activating && this._hadNoEvSinceDeact && this._lastCurrent === event.value;
+      if (!sameCurr) {
+        this._add(event.value, this._fn);
+      }
+      this._lastCurrent = event.value;
+      this._hadNoEvSinceDeact = false;
+    }
+
+    if (event.type === ERROR) {
+      this._emitError(event.value);
+    }
+
+    if (event.type === END) {
+      if (this._isEmpty()) {
+        this._emitEnd();
+      } else {
+        this._mainEnded = true;
+      }
+    }
+  },
+  _onEmpty: function () {
+    if (this._mainEnded) {
+      this._emitEnd();
+    }
+  },
+  _clear: function () {
+    AbstractPool.prototype._clear.call(this);
+    this._source = null;
+    this._lastCurrent = null;
+    this._$handleMain = null;
+  }
+});
+
+function FlatMapErrors(source, fn) {
+  FlatMap.call(this, source, fn);
+}
+
+inherit(FlatMapErrors, FlatMap, {
+  // Same as in FlatMap, only VALUE/ERROR flipped
+  _handleMain: function (event) {
+    if (event.type === ERROR) {
+      var sameCurr = this._activating && this._hadNoEvSinceDeact && this._lastCurrent === event.value;
+      if (!sameCurr) {
+        this._add(event.value, this._fn);
+      }
+      this._lastCurrent = event.value;
+      this._hadNoEvSinceDeact = false;
+    }
+
+    if (event.type === VALUE) {
+      this._emitValue(event.value);
+    }
+
+    if (event.type === END) {
+      if (this._isEmpty()) {
+        this._emitEnd();
+      } else {
+        this._mainEnded = true;
+      }
+    }
+  }
+});
+
+function createConstructor$1(BaseClass, name) {
+  return function AnonymousObservable(primary, secondary, options) {
+    var _this = this;
+
+    BaseClass.call(this);
+    this._primary = primary;
+    this._secondary = secondary;
+    this._name = primary._name + '.' + name;
+    this._lastSecondary = NOTHING;
+    this._$handleSecondaryAny = function (event) {
+      return _this._handleSecondaryAny(event);
+    };
+    this._$handlePrimaryAny = function (event) {
+      return _this._handlePrimaryAny(event);
+    };
+    this._init(options);
+  };
+}
+
+function createClassMethods$1(BaseClass) {
+  return {
+    _init: function () {},
+    _free: function () {},
+    _handlePrimaryValue: function (x) {
+      this._emitValue(x);
+    },
+    _handlePrimaryError: function (x) {
+      this._emitError(x);
+    },
+    _handlePrimaryEnd: function () {
+      this._emitEnd();
+    },
+    _handleSecondaryValue: function (x) {
+      this._lastSecondary = x;
+    },
+    _handleSecondaryError: function (x) {
+      this._emitError(x);
+    },
+    _handleSecondaryEnd: function () {},
+    _handlePrimaryAny: function (event) {
+      switch (event.type) {
+        case VALUE:
+          return this._handlePrimaryValue(event.value);
+        case ERROR:
+          return this._handlePrimaryError(event.value);
+        case END:
+          return this._handlePrimaryEnd(event.value);
+      }
+    },
+    _handleSecondaryAny: function (event) {
+      switch (event.type) {
+        case VALUE:
+          return this._handleSecondaryValue(event.value);
+        case ERROR:
+          return this._handleSecondaryError(event.value);
+        case END:
+          this._handleSecondaryEnd(event.value);
+          this._removeSecondary();
+      }
+    },
+    _removeSecondary: function () {
+      if (this._secondary !== null) {
+        this._secondary.offAny(this._$handleSecondaryAny);
+        this._$handleSecondaryAny = null;
+        this._secondary = null;
+      }
+    },
+    _onActivation: function () {
+      if (this._secondary !== null) {
+        this._secondary.onAny(this._$handleSecondaryAny);
+      }
+      if (this._active) {
+        this._primary.onAny(this._$handlePrimaryAny);
+      }
+    },
+    _onDeactivation: function () {
+      if (this._secondary !== null) {
+        this._secondary.offAny(this._$handleSecondaryAny);
+      }
+      this._primary.offAny(this._$handlePrimaryAny);
+    },
+    _clear: function () {
+      BaseClass.prototype._clear.call(this);
+      this._primary = null;
+      this._secondary = null;
+      this._lastSecondary = null;
+      this._$handleSecondaryAny = null;
+      this._$handlePrimaryAny = null;
+      this._free();
+    }
+  };
+}
+
+function createStream$1(name, mixin) {
+  var S = createConstructor$1(Stream, name);
+  inherit(S, Stream, createClassMethods$1(Stream), mixin);
+  return S;
+}
+
+function createProperty$1(name, mixin) {
+  var P = createConstructor$1(Property, name);
+  inherit(P, Property, createClassMethods$1(Property), mixin);
+  return P;
+}
+
+var mixin$26 = {
+  _handlePrimaryValue: function (x) {
+    if (this._lastSecondary !== NOTHING && this._lastSecondary) {
+      this._emitValue(x);
+    }
+  },
+  _handleSecondaryEnd: function () {
+    if (this._lastSecondary === NOTHING || !this._lastSecondary) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$34 = createStream$1('filterBy', mixin$26);
+var P$29 = createProperty$1('filterBy', mixin$26);
+
+function filterBy(primary, secondary) {
+  return new (primary._ofSameType(S$34, P$29))(primary, secondary);
+}
+
+var id2 = function (_, x) {
+  return x;
+};
+
+function sampledBy(passive, active, combinator) {
+  var _combinator = combinator ? function (a, b) {
+    return combinator(b, a);
+  } : id2;
+  return combine([active], [passive], _combinator).setName(passive, 'sampledBy');
+}
+
+var mixin$27 = {
+  _handlePrimaryValue: function (x) {
+    if (this._lastSecondary !== NOTHING) {
+      this._emitValue(x);
+    }
+  },
+  _handleSecondaryEnd: function () {
+    if (this._lastSecondary === NOTHING) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$35 = createStream$1('skipUntilBy', mixin$27);
+var P$30 = createProperty$1('skipUntilBy', mixin$27);
+
+function skipUntilBy(primary, secondary) {
+  return new (primary._ofSameType(S$35, P$30))(primary, secondary);
+}
+
+var mixin$28 = {
+  _handleSecondaryValue: function () {
+    this._emitEnd();
+  }
+};
+
+var S$36 = createStream$1('takeUntilBy', mixin$28);
+var P$31 = createProperty$1('takeUntilBy', mixin$28);
+
+function takeUntilBy(primary, secondary) {
+  return new (primary._ofSameType(S$36, P$31))(primary, secondary);
+}
+
+var mixin$29 = {
+  _init: function () {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$flushOnEnd = _ref.flushOnEnd,
+        flushOnEnd = _ref$flushOnEnd === undefined ? true : _ref$flushOnEnd;
+
+    this._buff = [];
+    this._flushOnEnd = flushOnEnd;
+  },
+  _free: function () {
+    this._buff = null;
+  },
+  _flush: function () {
+    if (this._buff !== null) {
+      this._emitValue(this._buff);
+      this._buff = [];
+    }
+  },
+  _handlePrimaryEnd: function () {
+    if (this._flushOnEnd) {
+      this._flush();
+    }
+    this._emitEnd();
+  },
+  _onActivation: function () {
+    this._primary.onAny(this._$handlePrimaryAny);
+    if (this._alive && this._secondary !== null) {
+      this._secondary.onAny(this._$handleSecondaryAny);
+    }
+  },
+  _handlePrimaryValue: function (x) {
+    this._buff.push(x);
+  },
+  _handleSecondaryValue: function () {
+    this._flush();
+  },
+  _handleSecondaryEnd: function () {
+    if (!this._flushOnEnd) {
+      this._emitEnd();
+    }
+  }
+};
+
+var S$37 = createStream$1('bufferBy', mixin$29);
+var P$32 = createProperty$1('bufferBy', mixin$29);
+
+function bufferBy(primary, secondary, options /* optional */) {
+  return new (primary._ofSameType(S$37, P$32))(primary, secondary, options);
+}
+
+var mixin$30 = {
+  _init: function () {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$flushOnEnd = _ref.flushOnEnd,
+        flushOnEnd = _ref$flushOnEnd === undefined ? true : _ref$flushOnEnd,
+        _ref$flushOnChange = _ref.flushOnChange,
+        flushOnChange = _ref$flushOnChange === undefined ? false : _ref$flushOnChange;
+
+    this._buff = [];
+    this._flushOnEnd = flushOnEnd;
+    this._flushOnChange = flushOnChange;
+  },
+  _free: function () {
+    this._buff = null;
+  },
+  _flush: function () {
+    if (this._buff !== null) {
+      this._emitValue(this._buff);
+      this._buff = [];
+    }
+  },
+  _handlePrimaryEnd: function () {
+    if (this._flushOnEnd) {
+      this._flush();
+    }
+    this._emitEnd();
+  },
+  _handlePrimaryValue: function (x) {
+    this._buff.push(x);
+    if (this._lastSecondary !== NOTHING && !this._lastSecondary) {
+      this._flush();
+    }
+  },
+  _handleSecondaryEnd: function () {
+    if (!this._flushOnEnd && (this._lastSecondary === NOTHING || this._lastSecondary)) {
+      this._emitEnd();
+    }
+  },
+  _handleSecondaryValue: function (x) {
+    if (this._flushOnChange && !x) {
+      this._flush();
+    }
+
+    // from default _handleSecondaryValue
+    this._lastSecondary = x;
+  }
+};
+
+var S$38 = createStream$1('bufferWhileBy', mixin$30);
+var P$33 = createProperty$1('bufferWhileBy', mixin$30);
+
+function bufferWhileBy(primary, secondary, options /* optional */) {
+  return new (primary._ofSameType(S$38, P$33))(primary, secondary, options);
+}
+
+var f = function () {
+  return false;
+};
+var t = function () {
+  return true;
+};
+
+function awaiting(a, b) {
+  var result = merge([map$1(a, t), map$1(b, f)]);
+  result = skipDuplicates(result);
+  result = toProperty(result, f);
+  return result.setName(a, 'awaiting');
+}
+
+var mixin$31 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleValue: function (x) {
+    var fn = this._fn;
+    var result = fn(x);
+    if (result.convert) {
+      this._emitError(result.error);
+    } else {
+      this._emitValue(x);
+    }
+  }
+};
+
+var S$39 = createStream('valuesToErrors', mixin$31);
+var P$34 = createProperty('valuesToErrors', mixin$31);
+
+var defFn = function (x) {
+  return { convert: true, error: x };
+};
+
+function valuesToErrors(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defFn;
+
+  return new (obs._ofSameType(S$39, P$34))(obs, { fn: fn });
+}
+
+var mixin$32 = {
+  _init: function (_ref) {
+    var fn = _ref.fn;
+
+    this._fn = fn;
+  },
+  _free: function () {
+    this._fn = null;
+  },
+  _handleError: function (x) {
+    var fn = this._fn;
+    var result = fn(x);
+    if (result.convert) {
+      this._emitValue(result.value);
+    } else {
+      this._emitError(x);
+    }
+  }
+};
+
+var S$40 = createStream('errorsToValues', mixin$32);
+var P$35 = createProperty('errorsToValues', mixin$32);
+
+var defFn$1 = function (x) {
+  return { convert: true, value: x };
+};
+
+function errorsToValues(obs) {
+  var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defFn$1;
+
+  return new (obs._ofSameType(S$40, P$35))(obs, { fn: fn });
+}
+
+var mixin$33 = {
+  _handleError: function (x) {
+    this._emitError(x);
+    this._emitEnd();
+  }
+};
+
+var S$41 = createStream('endOnError', mixin$33);
+var P$36 = createProperty('endOnError', mixin$33);
+
+function endOnError(obs) {
+  return new (obs._ofSameType(S$41, P$36))(obs);
+}
+
+// Create a stream
+// -----------------------------------------------------------------------------
+
+// () -> Stream
+// (number, any) -> Stream
+// (number, any) -> Stream
+// (number, Array<any>) -> Stream
+// (number, Function) -> Stream
+// (number, Function) -> Stream
+// (Function) -> Stream
+// (Function) -> Stream
+// Target = {addEventListener, removeEventListener}|{addListener, removeListener}|{on, off}
+// (Target, string, Function|undefined) -> Stream
+// (Function) -> Stream
+// Create a property
+// -----------------------------------------------------------------------------
+
+// (any) -> Property
+// (any) -> Property
+// Convert observables
+// -----------------------------------------------------------------------------
+
+// (Stream|Property, Function|undefined) -> Property
+Observable.prototype.toProperty = function (fn) {
+  return toProperty(this, fn);
+};
+
+// (Stream|Property) -> Stream
+Observable.prototype.changes = function () {
+  return changes(this);
+};
+
+// Interoperation with other implimentations
+// -----------------------------------------------------------------------------
+
+// (Promise) -> Property
+// (Stream|Property, Function|undefined) -> Promise
+Observable.prototype.toPromise = function (Promise) {
+  return toPromise(this, Promise);
+};
+
+// (ESObservable) -> Stream
+// (Stream|Property) -> ES7 Observable
+Observable.prototype.toESObservable = toESObservable;
+Observable.prototype[$$observable] = toESObservable;
+
+// Modify an observable
+// -----------------------------------------------------------------------------
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.map = function (fn) {
+  return map$1(this, fn);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.filter = function (fn) {
+  return filter(this, fn);
+};
+
+// (Stream, number) -> Stream
+// (Property, number) -> Property
+Observable.prototype.take = function (n) {
+  return take(this, n);
+};
+
+// (Stream, number) -> Stream
+// (Property, number) -> Property
+Observable.prototype.takeErrors = function (n) {
+  return takeErrors(this, n);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.takeWhile = function (fn) {
+  return takeWhile(this, fn);
+};
+
+// (Stream) -> Stream
+// (Property) -> Property
+Observable.prototype.last = function () {
+  return last(this);
+};
+
+// (Stream, number) -> Stream
+// (Property, number) -> Property
+Observable.prototype.skip = function (n) {
+  return skip(this, n);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.skipWhile = function (fn) {
+  return skipWhile(this, fn);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.skipDuplicates = function (fn) {
+  return skipDuplicates(this, fn);
+};
+
+// (Stream, Function|falsey, any|undefined) -> Stream
+// (Property, Function|falsey, any|undefined) -> Property
+Observable.prototype.diff = function (fn, seed) {
+  return diff(this, fn, seed);
+};
+
+// (Stream|Property, Function, any|undefined) -> Property
+Observable.prototype.scan = function (fn, seed) {
+  return scan(this, fn, seed);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.flatten = function (fn) {
+  return flatten(this, fn);
+};
+
+// (Stream, number) -> Stream
+// (Property, number) -> Property
+Observable.prototype.delay = function (wait) {
+  return delay(this, wait);
+};
+
+// Options = {leading: boolean|undefined, trailing: boolean|undefined}
+// (Stream, number, Options|undefined) -> Stream
+// (Property, number, Options|undefined) -> Property
+Observable.prototype.throttle = function (wait, options) {
+  return throttle(this, wait, options);
+};
+
+// Options = {immediate: boolean|undefined}
+// (Stream, number, Options|undefined) -> Stream
+// (Property, number, Options|undefined) -> Property
+Observable.prototype.debounce = function (wait, options) {
+  return debounce(this, wait, options);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.mapErrors = function (fn) {
+  return mapErrors(this, fn);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.filterErrors = function (fn) {
+  return filterErrors(this, fn);
+};
+
+// (Stream) -> Stream
+// (Property) -> Property
+Observable.prototype.ignoreValues = function () {
+  return ignoreValues(this);
+};
+
+// (Stream) -> Stream
+// (Property) -> Property
+Observable.prototype.ignoreErrors = function () {
+  return ignoreErrors(this);
+};
+
+// (Stream) -> Stream
+// (Property) -> Property
+Observable.prototype.ignoreEnd = function () {
+  return ignoreEnd(this);
+};
+
+// (Stream, Function) -> Stream
+// (Property, Function) -> Property
+Observable.prototype.beforeEnd = function (fn) {
+  return beforeEnd(this, fn);
+};
+
+// (Stream, number, number|undefined) -> Stream
+// (Property, number, number|undefined) -> Property
+Observable.prototype.slidingWindow = function (max, min) {
+  return slidingWindow(this, max, min);
+};
+
+// Options = {flushOnEnd: boolean|undefined}
+// (Stream, Function|falsey, Options|undefined) -> Stream
+// (Property, Function|falsey, Options|undefined) -> Property
+Observable.prototype.bufferWhile = function (fn, options) {
+  return bufferWhile(this, fn, options);
+};
+
+// (Stream, number) -> Stream
+// (Property, number) -> Property
+Observable.prototype.bufferWithCount = function (count, options) {
+  return bufferWhile$1(this, count, options);
+};
+
+// Options = {flushOnEnd: boolean|undefined}
+// (Stream, number, number, Options|undefined) -> Stream
+// (Property, number, number, Options|undefined) -> Property
+Observable.prototype.bufferWithTimeOrCount = function (wait, count, options) {
+  return bufferWithTimeOrCount(this, wait, count, options);
+};
+
+// (Stream, Function) -> Stream
+// (Property, Function) -> Property
+Observable.prototype.transduce = function (transducer) {
+  return transduce(this, transducer);
+};
+
+// (Stream, Function) -> Stream
+// (Property, Function) -> Property
+Observable.prototype.withHandler = function (fn) {
+  return withHandler(this, fn);
+};
+
+// Combine observables
+// -----------------------------------------------------------------------------
+
+// (Array<Stream|Property>, Function|undefiend) -> Stream
+// (Array<Stream|Property>, Array<Stream|Property>, Function|undefiend) -> Stream
+Observable.prototype.combine = function (other, combinator) {
+  return combine([this, other], combinator);
+};
+
+// (Array<Stream|Property>, Function|undefiend) -> Stream
+Observable.prototype.zip = function (other, combinator) {
+  return zip([this, other], combinator);
+};
+
+// (Array<Stream|Property>) -> Stream
+Observable.prototype.merge = function (other) {
+  return merge([this, other]);
+};
+
+// (Array<Stream|Property>) -> Stream
+Observable.prototype.concat = function (other) {
+  return concat$1([this, other]);
+};
+
+// () -> Pool
+var pool = function () {
+  return new Pool();
+};
+
+// (Function) -> Stream
+// Options = {concurLim: number|undefined, queueLim: number|undefined, drop: 'old'|'new'|undefiend}
+// (Stream|Property, Function|falsey, Options|undefined) -> Stream
+Observable.prototype.flatMap = function (fn) {
+  return new FlatMap(this, fn).setName(this, 'flatMap');
+};
+Observable.prototype.flatMapLatest = function (fn) {
+  return new FlatMap(this, fn, { concurLim: 1, drop: 'old' }).setName(this, 'flatMapLatest');
+};
+Observable.prototype.flatMapFirst = function (fn) {
+  return new FlatMap(this, fn, { concurLim: 1 }).setName(this, 'flatMapFirst');
+};
+Observable.prototype.flatMapConcat = function (fn) {
+  return new FlatMap(this, fn, { queueLim: -1, concurLim: 1 }).setName(this, 'flatMapConcat');
+};
+Observable.prototype.flatMapConcurLimit = function (fn, limit) {
+  return new FlatMap(this, fn, { queueLim: -1, concurLim: limit }).setName(this, 'flatMapConcurLimit');
+};
+
+// (Stream|Property, Function|falsey) -> Stream
+Observable.prototype.flatMapErrors = function (fn) {
+  return new FlatMapErrors(this, fn).setName(this, 'flatMapErrors');
+};
+
+// Combine two observables
+// -----------------------------------------------------------------------------
+
+// (Stream, Stream|Property) -> Stream
+// (Property, Stream|Property) -> Property
+Observable.prototype.filterBy = function (other) {
+  return filterBy(this, other);
+};
+
+// (Stream, Stream|Property, Function|undefiend) -> Stream
+// (Property, Stream|Property, Function|undefiend) -> Property
+Observable.prototype.sampledBy = function (other, combinator) {
+  return sampledBy(this, other, combinator);
+};
+
+// (Stream, Stream|Property) -> Stream
+// (Property, Stream|Property) -> Property
+Observable.prototype.skipUntilBy = function (other) {
+  return skipUntilBy(this, other);
+};
+
+// (Stream, Stream|Property) -> Stream
+// (Property, Stream|Property) -> Property
+Observable.prototype.takeUntilBy = function (other) {
+  return takeUntilBy(this, other);
+};
+
+// Options = {flushOnEnd: boolean|undefined}
+// (Stream, Stream|Property, Options|undefined) -> Stream
+// (Property, Stream|Property, Options|undefined) -> Property
+Observable.prototype.bufferBy = function (other, options) {
+  return bufferBy(this, other, options);
+};
+
+// Options = {flushOnEnd: boolean|undefined}
+// (Stream, Stream|Property, Options|undefined) -> Stream
+// (Property, Stream|Property, Options|undefined) -> Property
+Observable.prototype.bufferWhileBy = function (other, options) {
+  return bufferWhileBy(this, other, options);
+};
+
+// Deprecated
+// -----------------------------------------------------------------------------
+
+var DEPRECATION_WARNINGS = true;
+function dissableDeprecationWarnings() {
+  DEPRECATION_WARNINGS = false;
+}
+
+function warn(msg) {
+  if (DEPRECATION_WARNINGS && console && typeof console.warn === 'function') {
+    var msg2 = '\nHere is an Error object for you containing the call stack:';
+    console.warn(msg, msg2, new Error());
+  }
+}
+
+// (Stream|Property, Stream|Property) -> Property
+Observable.prototype.awaiting = function (other) {
+  warn('You are using deprecated .awaiting() method, see https://github.com/rpominov/kefir/issues/145');
+  return awaiting(this, other);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.valuesToErrors = function (fn) {
+  warn('You are using deprecated .valuesToErrors() method, see https://github.com/rpominov/kefir/issues/149');
+  return valuesToErrors(this, fn);
+};
+
+// (Stream, Function|undefined) -> Stream
+// (Property, Function|undefined) -> Property
+Observable.prototype.errorsToValues = function (fn) {
+  warn('You are using deprecated .errorsToValues() method, see https://github.com/rpominov/kefir/issues/149');
+  return errorsToValues(this, fn);
+};
+
+// (Stream) -> Stream
+// (Property) -> Property
+Observable.prototype.endOnError = function () {
+  warn('You are using deprecated .endOnError() method, see https://github.com/rpominov/kefir/issues/150');
+  return endOnError(this);
+};
+
+// Exports
+// --------------------------------------------------------------------------
+
+var Kefir = {
+  Observable: Observable,
+  Stream: Stream,
+  Property: Property,
+  never: never,
+  later: later,
+  interval: interval,
+  sequentially: sequentially,
+  fromPoll: fromPoll,
+  withInterval: withInterval,
+  fromCallback: fromCallback,
+  fromNodeCallback: fromNodeCallback,
+  fromEvents: fromEvents,
+  stream: stream,
+  constant: constant,
+  constantError: constantError,
+  fromPromise: fromPromise,
+  fromESObservable: fromESObservable,
+  combine: combine,
+  zip: zip,
+  merge: merge,
+  concat: concat$1,
+  Pool: Pool,
+  pool: pool,
+  repeat: repeat,
+  staticLand: staticLand
+};
+
+Kefir.Kefir = Kefir;
+
+exports.dissableDeprecationWarnings = dissableDeprecationWarnings;
+exports.Kefir = Kefir;
+exports.Observable = Observable;
+exports.Stream = Stream;
+exports.Property = Property;
+exports.never = never;
+exports.later = later;
+exports.interval = interval;
+exports.sequentially = sequentially;
+exports.fromPoll = fromPoll;
+exports.withInterval = withInterval;
+exports.fromCallback = fromCallback;
+exports.fromNodeCallback = fromNodeCallback;
+exports.fromEvents = fromEvents;
+exports.stream = stream;
+exports.constant = constant;
+exports.constantError = constantError;
+exports.fromPromise = fromPromise;
+exports.fromESObservable = fromESObservable;
+exports.combine = combine;
+exports.zip = zip;
+exports.merge = merge;
+exports.concat = concat$1;
+exports.Pool = Pool;
+exports.pool = pool;
+exports.repeat = repeat;
+exports.staticLand = staticLand;
+exports['default'] = Kefir;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ })
+/******/ ]);
 //# sourceMappingURL=angular-bus.js.map

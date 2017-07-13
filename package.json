@@ -1,9 +1,8 @@
 {
   "name": "angular-bus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Advanced Message Bus for Angular apps",
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
     "kefir": "^3.7.1"
   },
